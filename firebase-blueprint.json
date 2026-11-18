@@ -1,0 +1,409 @@
+{
+  "entities": {
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Authorized Palazzo Motos administrator profile.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 254
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "role": {
+          "type": "string",
+          "enum": ["admin", "owner"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "email", "role", "createdAt"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Motorcycle category for storefront segmentation and filtering.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 60
+        },
+        "slug": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 80,
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "imagePath": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "sortOrder": {
+          "type": "integer"
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["name", "slug", "sortOrder", "active", "createdAt", "updatedAt"]
+    },
+    "Motorcycle": {
+      "title": "Motorcycle",
+      "description": "Motorcycle inventory item with specs, commercial info, status, and media.",
+      "type": "object",
+      "properties": {
+        "slug": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 140,
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 140
+        },
+        "brand": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 60
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "version": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "categoryId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "categoryName": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "yearManufacture": {
+          "type": "integer"
+        },
+        "yearModel": {
+          "type": "integer"
+        },
+        "engineCc": {
+          "type": "integer"
+        },
+        "mileage": {
+          "type": "integer"
+        },
+        "color": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "fuel": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "transmission": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "power": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "cylinders": {
+          "type": "integer"
+        },
+        "features": {
+          "type": "array"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "price": {
+          "type": "number"
+        },
+        "oldPrice": {
+          "type": "number"
+        },
+        "paymentInfo": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "downPaymentInfo": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "installmentInfo": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "promoText": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "condition": {
+          "type": "string",
+          "enum": ["new", "used"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["available", "reserved", "sold", "hidden"]
+        },
+        "featured": {
+          "type": "boolean"
+        },
+        "published": {
+          "type": "boolean"
+        },
+        "badge": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "sortOrder": {
+          "type": "integer"
+        },
+        "isDemo": {
+          "type": "boolean"
+        },
+        "coverImage": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "images": {
+          "type": "array"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "slug",
+        "name",
+        "brand",
+        "model",
+        "categoryId",
+        "yearModel",
+        "price",
+        "status",
+        "featured",
+        "published",
+        "sortOrder",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Banner": {
+      "title": "Banner",
+      "description": "Promotional campaign banner managed from the admin panel.",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "subtitle": {
+          "type": "string",
+          "maxLength": 280
+        },
+        "imageDesktop": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "imageMobile": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "ctaText": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "ctaUrl": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "sortOrder": {
+          "type": "integer"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["title", "active", "sortOrder", "createdAt", "updatedAt"]
+    },
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "description": "Global storefront content, hero configuration, contact info, and section visibility.",
+      "type": "object",
+      "properties": {
+        "companyName": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "logoUrl": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "whatsappNumber": {
+          "type": "string",
+          "maxLength": 24
+        },
+        "phone": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "instagram": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "address": {
+          "type": "string",
+          "maxLength": 240
+        },
+        "openingHours": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "heroHeadline": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "heroSubheadline": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "heroImageDesktop": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "heroImageMobile": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "heroPrimaryCtaText": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "heroPrimaryCtaUrl": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "heroSecondaryCtaText": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "heroSecondaryCtaUrl": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "aboutTitle": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "aboutText": {
+          "type": "string",
+          "maxLength": 1600
+        },
+        "finalCtaTitle": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "finalCtaSubtitle": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "finalCtaButtonText": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "seoTitle": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "seoDescription": {
+          "type": "string",
+          "maxLength": 320
+        },
+        "activeSections": {
+          "type": "object"
+        },
+        "sectionsOrder": {
+          "type": "array"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["companyName", "whatsappNumber", "heroHeadline", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Authorized admin accounts allowed to manage Palazzo Motos inventory and storefront."
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Motorcycle categories."
+    },
+    "/motorcycles/{motorcycleId}": {
+      "schema": { "$ref": "#/entities/Motorcycle" },
+      "description": "Motorcycle inventory catalog documents."
+    },
+    "/banners/{bannerId}": {
+      "schema": { "$ref": "#/entities/Banner" },
+      "description": "Promotional banners."
+    },
+    "/site_settings/{settingId}": {
+      "schema": { "$ref": "#/entities/SiteSettings" },
+      "description": "Storefront configuration document (main)."
+    }
+  }
+}

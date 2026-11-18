@@ -1,0 +1,255 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ==========================================
+    // Primitives & Identity Helpers
+    // ==========================================
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwnerEmail() {
+      return isVerifiedUser() && (
+        request.auth.token.email == 'contato@macieldsgn.com' ||
+        request.auth.token.email == 'palazzomotos@gmail.com'
+      );
+    }
+
+    function isAdmin() {
+      return isOwnerEmail() || (
+        isVerifiedUser() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidSlug(s) {
+      return s is string && s.size() >= 2 && s.size() <= 140 && s.matches('^[a-z0-9]+(?:-[a-z0-9]+)*$');
+    }
+
+    // ==========================================
+    // Validation Blueprints
+    // ==========================================
+    function isValidAdminUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'role', 'createdAt']) &&
+        data.keys().hasOnly(['uid', 'email', 'name', 'role', 'createdAt']) &&
+        isValidId(data.uid) &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 254 &&
+        (!('name' in data) || (data.name is string && data.name.size() <= 120)) &&
+        data.role in ['admin', 'owner'] &&
+        data.createdAt is timestamp;
+    }
+
+    function isValidCategory(data) {
+      return data.keys().hasAll(['name', 'slug', 'sortOrder', 'active', 'createdAt', 'updatedAt']) &&
+        data.keys().hasOnly(['name', 'slug', 'description', 'imagePath', 'sortOrder', 'active', 'createdAt', 'updatedAt']) &&
+        data.name is string && data.name.size() >= 2 && data.name.size() <= 60 &&
+        isValidSlug(data.slug) && data.slug.size() <= 80 &&
+        (!('description' in data) || (data.description is string && data.description.size() <= 300)) &&
+        (!('imagePath' in data) || (data.imagePath is string && data.imagePath.size() <= 500)) &&
+        data.sortOrder is int && data.sortOrder >= 0 && data.sortOrder <= 10000 &&
+        data.active is bool &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidMotorcycle(data) {
+      return data.keys().hasAll([
+          'slug', 'name', 'brand', 'model', 'categoryId',
+          'yearModel', 'price', 'status', 'featured', 'published',
+          'sortOrder', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'slug', 'name', 'brand', 'model', 'version', 'categoryId', 'categoryName',
+          'yearManufacture', 'yearModel', 'engineCc', 'mileage', 'color', 'fuel',
+          'transmission', 'power', 'cylinders', 'features', 'description',
+          'price', 'oldPrice', 'paymentInfo', 'downPaymentInfo', 'installmentInfo',
+          'promoText', 'condition', 'status', 'featured', 'published', 'badge',
+          'sortOrder', 'isDemo', 'coverImage', 'images', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidSlug(data.slug) &&
+        data.name is string && data.name.size() >= 2 && data.name.size() <= 140 &&
+        data.brand is string && data.brand.size() >= 2 && data.brand.size() <= 60 &&
+        data.model is string && data.model.size() >= 1 && data.model.size() <= 80 &&
+        (!('version' in data) || (data.version is string && data.version.size() <= 80)) &&
+        isValidId(data.categoryId) &&
+        (!('categoryName' in data) || (data.categoryName is string && data.categoryName.size() <= 60)) &&
+        (!('yearManufacture' in data) || (data.yearManufacture is int && data.yearManufacture >= 1950 && data.yearManufacture <= 2100)) &&
+        data.yearModel is int && data.yearModel >= 1950 && data.yearModel <= 2100 &&
+        (!('engineCc' in data) || (data.engineCc is int && data.engineCc >= 0 && data.engineCc <= 10000)) &&
+        (!('mileage' in data) || (data.mileage is int && data.mileage >= 0 && data.mileage <= 2000000)) &&
+        (!('color' in data) || (data.color is string && data.color.size() <= 40)) &&
+        (!('fuel' in data) || (data.fuel is string && data.fuel.size() <= 40)) &&
+        (!('transmission' in data) || (data.transmission is string && data.transmission.size() <= 60)) &&
+        (!('power' in data) || (data.power is string && data.power.size() <= 60)) &&
+        (!('cylinders' in data) || (data.cylinders is int && data.cylinders >= 1 && data.cylinders <= 12)) &&
+        (!('features' in data) || (data.features is list && data.features.size() <= 20 && (data.features.size() == 0 || data.features[0] is string))) &&
+        (!('description' in data) || (data.description is string && data.description.size() <= 4000)) &&
+        data.price is number && data.price >= 0 && data.price <= 100000000 &&
+        (!('oldPrice' in data) || data.oldPrice == null || (data.oldPrice is number && data.oldPrice >= 0 && data.oldPrice <= 100000000)) &&
+        (!('paymentInfo' in data) || (data.paymentInfo is string && data.paymentInfo.size() <= 500)) &&
+        (!('downPaymentInfo' in data) || (data.downPaymentInfo is string && data.downPaymentInfo.size() <= 200)) &&
+        (!('installmentInfo' in data) || (data.installmentInfo is string && data.installmentInfo.size() <= 200)) &&
+        (!('promoText' in data) || (data.promoText is string && data.promoText.size() <= 160)) &&
+        (!('condition' in data) || data.condition in ['new', 'used']) &&
+        data.status in ['available', 'reserved', 'sold', 'hidden'] &&
+        data.featured is bool &&
+        data.published is bool &&
+        (!('badge' in data) || (data.badge is string && data.badge.size() <= 40)) &&
+        data.sortOrder is int && data.sortOrder >= 0 && data.sortOrder <= 100000 &&
+        (!('isDemo' in data) || data.isDemo is bool) &&
+        (!('coverImage' in data) || (data.coverImage is string && data.coverImage.size() <= 600)) &&
+        (!('images' in data) || (data.images is list && data.images.size() <= 15 && (data.images.size() == 0 || data.images[0] is map))) &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidBanner(data) {
+      return data.keys().hasAll(['title', 'active', 'sortOrder', 'createdAt', 'updatedAt']) &&
+        data.keys().hasOnly([
+          'title', 'subtitle', 'imageDesktop', 'imageMobile',
+          'ctaText', 'ctaUrl', 'active', 'sortOrder', 'createdAt', 'updatedAt'
+        ]) &&
+        data.title is string && data.title.size() >= 2 && data.title.size() <= 120 &&
+        (!('subtitle' in data) || (data.subtitle is string && data.subtitle.size() <= 280)) &&
+        (!('imageDesktop' in data) || (data.imageDesktop is string && data.imageDesktop.size() <= 600)) &&
+        (!('imageMobile' in data) || (data.imageMobile is string && data.imageMobile.size() <= 600)) &&
+        (!('ctaText' in data) || (data.ctaText is string && data.ctaText.size() <= 60)) &&
+        (!('ctaUrl' in data) || (data.ctaUrl is string && data.ctaUrl.size() <= 500)) &&
+        data.active is bool &&
+        data.sortOrder is int && data.sortOrder >= 0 && data.sortOrder <= 10000 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidSiteSettings(data) {
+      return data.keys().hasAll(['companyName', 'whatsappNumber', 'heroHeadline', 'updatedAt']) &&
+        data.keys().hasOnly([
+          'companyName', 'logoUrl', 'whatsappNumber', 'phone', 'instagram', 'email',
+          'address', 'openingHours', 'heroHeadline', 'heroSubheadline',
+          'heroImageDesktop', 'heroImageMobile', 'heroPrimaryCtaText', 'heroPrimaryCtaUrl',
+          'heroSecondaryCtaText', 'heroSecondaryCtaUrl', 'aboutTitle', 'aboutText',
+          'finalCtaTitle', 'finalCtaSubtitle', 'finalCtaButtonText',
+          'seoTitle', 'seoDescription', 'activeSections', 'sectionsOrder', 'updatedAt'
+        ]) &&
+        data.companyName is string && data.companyName.size() >= 2 && data.companyName.size() <= 100 &&
+        (!('logoUrl' in data) || (data.logoUrl is string && data.logoUrl.size() <= 600)) &&
+        data.whatsappNumber is string && data.whatsappNumber.size() >= 8 && data.whatsappNumber.size() <= 24 &&
+        (!('phone' in data) || (data.phone is string && data.phone.size() <= 40)) &&
+        (!('instagram' in data) || (data.instagram is string && data.instagram.size() <= 120)) &&
+        (!('email' in data) || (data.email is string && data.email.size() <= 120)) &&
+        (!('address' in data) || (data.address is string && data.address.size() <= 240)) &&
+        (!('openingHours' in data) || (data.openingHours is string && data.openingHours.size() <= 200)) &&
+        data.heroHeadline is string && data.heroHeadline.size() >= 2 && data.heroHeadline.size() <= 160 &&
+        (!('heroSubheadline' in data) || (data.heroSubheadline is string && data.heroSubheadline.size() <= 300)) &&
+        (!('heroImageDesktop' in data) || (data.heroImageDesktop is string && data.heroImageDesktop.size() <= 600)) &&
+        (!('heroImageMobile' in data) || (data.heroImageMobile is string && data.heroImageMobile.size() <= 600)) &&
+        (!('heroPrimaryCtaText' in data) || (data.heroPrimaryCtaText is string && data.heroPrimaryCtaText.size() <= 60)) &&
+        (!('heroPrimaryCtaUrl' in data) || (data.heroPrimaryCtaUrl is string && data.heroPrimaryCtaUrl.size() <= 300)) &&
+        (!('heroSecondaryCtaText' in data) || (data.heroSecondaryCtaText is string && data.heroSecondaryCtaText.size() <= 60)) &&
+        (!('heroSecondaryCtaUrl' in data) || (data.heroSecondaryCtaUrl is string && data.heroSecondaryCtaUrl.size() <= 300)) &&
+        (!('aboutTitle' in data) || (data.aboutTitle is string && data.aboutTitle.size() <= 120)) &&
+        (!('aboutText' in data) || (data.aboutText is string && data.aboutText.size() <= 1600)) &&
+        (!('finalCtaTitle' in data) || (data.finalCtaTitle is string && data.finalCtaTitle.size() <= 160)) &&
+        (!('finalCtaSubtitle' in data) || (data.finalCtaSubtitle is string && data.finalCtaSubtitle.size() <= 300)) &&
+        (!('finalCtaButtonText' in data) || (data.finalCtaButtonText is string && data.finalCtaButtonText.size() <= 60)) &&
+        (!('seoTitle' in data) || (data.seoTitle is string && data.seoTitle.size() <= 120)) &&
+        (!('seoDescription' in data) || (data.seoDescription is string && data.seoDescription.size() <= 320)) &&
+        (!('activeSections' in data) || data.activeSections is map) &&
+        (!('sectionsOrder' in data) || (data.sectionsOrder is list && data.sectionsOrder.size() <= 10 && (data.sectionsOrder.size() == 0 || data.sectionsOrder[0] is string))) &&
+        data.updatedAt is timestamp;
+    }
+
+    // ==========================================
+    // Collection Match Blocks
+    // ==========================================
+
+    match /admins/{adminId} {
+      allow get: if isValidId(adminId) && (isAdmin() || (isVerifiedUser() && request.auth.uid == adminId));
+      allow list: if isOwnerEmail();
+      allow create: if isValidId(adminId) && isAdmin() && isValidAdminUser(incoming()) && incoming().uid == adminId && incoming().createdAt == request.time;
+      allow update: if isValidId(adminId) && isAdmin() && isValidAdminUser(incoming()) && incoming().uid == existing().uid && incoming().createdAt == existing().createdAt;
+      allow delete: if isValidId(adminId) && isOwnerEmail() && adminId != request.auth.uid;
+    }
+
+    match /categories/{categoryId} {
+      allow get: if isValidId(categoryId) && (existing().active == true || isAdmin());
+      allow list: if (resource.data.active == true) || isOwnerEmail();
+      allow create: if isValidId(categoryId) && isAdmin() && isValidCategory(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isValidId(categoryId) && isAdmin() && isValidCategory(incoming()) && incoming().createdAt == existing().createdAt && incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['name', 'slug', 'description', 'imagePath', 'sortOrder', 'active', 'updatedAt']);
+      allow delete: if isValidId(categoryId) && isAdmin();
+    }
+
+    match /motorcycles/{motorcycleId} {
+      allow get: if isValidId(motorcycleId) && ((existing().published == true && existing().status != 'hidden') || isAdmin());
+      allow list: if (resource.data.published == true) || isOwnerEmail();
+      allow create: if isValidId(motorcycleId) && isAdmin() && isValidMotorcycle(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isValidId(motorcycleId) && isAdmin() && isValidMotorcycle(incoming()) && incoming().createdAt == existing().createdAt && incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'slug', 'name', 'brand', 'model', 'version', 'categoryId', 'categoryName',
+          'yearManufacture', 'yearModel', 'engineCc', 'mileage', 'color', 'fuel',
+          'transmission', 'power', 'cylinders', 'features', 'description',
+          'price', 'oldPrice', 'paymentInfo', 'downPaymentInfo', 'installmentInfo',
+          'promoText', 'condition', 'status', 'featured', 'published', 'badge',
+          'sortOrder', 'isDemo', 'coverImage', 'images', 'updatedAt'
+        ]);
+      allow delete: if isValidId(motorcycleId) && isAdmin();
+    }
+
+    match /banners/{bannerId} {
+      allow get: if isValidId(bannerId) && (existing().active == true || isAdmin());
+      allow list: if (resource.data.active == true) || isOwnerEmail();
+      allow create: if isValidId(bannerId) && isAdmin() && isValidBanner(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isValidId(bannerId) && isAdmin() && isValidBanner(incoming()) && incoming().createdAt == existing().createdAt && incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'title', 'subtitle', 'imageDesktop', 'imageMobile',
+          'ctaText', 'ctaUrl', 'active', 'sortOrder', 'updatedAt'
+        ]);
+      allow delete: if isValidId(bannerId) && isAdmin();
+    }
+
+    match /site_settings/{settingId} {
+      allow get: if isValidId(settingId) && settingId == 'main';
+      allow list: if isOwnerEmail();
+      allow create: if isValidId(settingId) && settingId == 'main' && isAdmin() && isValidSiteSettings(incoming()) && incoming().updatedAt == request.time;
+      allow update: if isValidId(settingId) && settingId == 'main' && isAdmin() && isValidSiteSettings(incoming()) && incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'companyName', 'logoUrl', 'whatsappNumber', 'phone', 'instagram', 'email',
+          'address', 'openingHours', 'heroHeadline', 'heroSubheadline',
+          'heroImageDesktop', 'heroImageMobile', 'heroPrimaryCtaText', 'heroPrimaryCtaUrl',
+          'heroSecondaryCtaText', 'heroSecondaryCtaUrl', 'aboutTitle', 'aboutText',
+          'finalCtaTitle', 'finalCtaSubtitle', 'finalCtaButtonText',
+          'seoTitle', 'seoDescription', 'activeSections', 'sectionsOrder', 'updatedAt'
+        ]);
+      allow delete: if false;
+    }
+
+    // Health check document for connection validation
+    match /test/{docId} {
+      allow get: if docId == 'connection';
+      allow list, write: if false;
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Palazzo Motos — Digital Showroom & Gestão de Estoque",
+  "description": "Vitrine digital premium, catálogo de motocicletas e painel administrativo da Palazzo Motos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

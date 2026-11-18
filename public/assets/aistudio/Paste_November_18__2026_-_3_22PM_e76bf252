@@ -1,0 +1,1875 @@
+# PROJETO: PALAZZO MOTOS — DIGITAL SHOWROOM & INVENTORY MANAGEMENT
+
+## 1. CONTEXTO E OBJETIVO
+
+Desenvolva uma plataforma web completa, responsiva, moderna e profissional para a PALAZZO MOTOS, uma revenda de motocicletas.
+
+O projeto deve ser construído como uma experiência digital de concessionária premium, combinando:
+
+- Vitrine digital de motocicletas.
+- Catálogo de veículos.
+- Busca e filtros inteligentes.
+- Página individual de cada motocicleta.
+- Integração com WhatsApp.
+- Sistema de gerenciamento de estoque.
+- Painel administrativo privado.
+- Editor de conteúdo da página inicial.
+- Banco de dados integrado ao Supabase.
+- Armazenamento de imagens no Supabase Storage.
+- Autenticação administrativa.
+- Atualização dinâmica dos dados em tempo real ou por revalidação eficiente.
+
+A aplicação deve permitir que o proprietário da Palazzo Motos gerencie todo o catálogo de forma independente, sem precisar editar código, acessar o banco de dados manualmente ou solicitar alterações a um desenvolvedor para operações cotidianas.
+
+O objetivo é construir um sistema real, funcional e preparado para produção, não apenas um protótipo visual.
+
+---
+
+# 2. REFERÊNCIAS VISUAIS E DIREÇÃO CRIATIVA
+
+Utilize os arquivos de referência anexados ao projeto como fontes visuais obrigatórias:
+
+### REFERÊNCIA 01 — LOGOTIPO PALAZZO
+
+O logotipo original da Palazzo Motos é a principal referência de identidade.
+
+Preserve o logotipo original, sua proporção, seu desenho, sua estrutura e sua legibilidade.
+
+Não redesenhe, não simplifique, não modifique sua geometria e não crie uma versão alternativa por conta própria.
+
+O logotipo apresenta uma estética:
+
+- Metálica.
+- Industrial.
+- Tridimensional.
+- Automotiva.
+- Agressiva.
+- Tecnológica.
+- Associada à velocidade e performance.
+
+A identidade do site deve conversar com o logotipo, mas não competir com ele.
+
+Utilizar o logo de forma apropriada, considerando a necessidade de versões claras, escuras e diferentes aplicações em fundos.
+
+### REFERÊNCIA 02 — DESIGN SYSTEM E STORIES
+
+Utilizar como referência a imagem que apresenta:
+
+- Fundo grafite.
+- Verde-limão intenso.
+- Branco.
+- Cinza.
+- Tipografia geométrica.
+- Títulos em peso elevado.
+- Formas gráficas angulares.
+- Glow verde controlado.
+- Elementos circulares.
+- Linhas de movimento.
+- Barras e recortes.
+- Composições minimalistas.
+- Contraste.
+- Linguagem de performance e tecnologia.
+
+A referência representa uma linguagem visual que pode ser aplicada tanto em conteúdos digitais quanto no site.
+
+### REFERÊNCIA 03 — DIAGRAMAÇÃO DA VITRINE
+
+Utilizar a terceira referência como inspiração para a arquitetura e diagramação comercial.
+
+Observar:
+
+- Header com navegação.
+- Hero amplo.
+- Imagens de motos.
+- Alternância entre fundo escuro e áreas de destaque.
+- Categorias visualmente segmentadas.
+- Grid de produtos.
+- Cards de motos.
+- CTA de compra.
+- Seções promocionais.
+- Hierarquia entre banners e catálogo.
+- Footer institucional.
+
+Não reproduzir literalmente o website de referência.
+
+Criar uma versão própria para PALAZZO MOTOS, com identidade original, estrutura aprimorada, UX mais fluida, design premium e consistência com o logotipo.
+
+---
+
+# 3. CONCEITO DA MARCA DIGITAL
+
+Nome do projeto:
+
+PALAZZO MOTOS
+
+Conceito criativo:
+
+PERFORMANCE / MOTION / MACHINE
+
+A experiência deve transmitir:
+
+- Liberdade.
+- Velocidade.
+- Confiança.
+- Tecnologia.
+- Movimento.
+- Potência.
+- Exclusividade.
+- Negócio.
+- Desejo.
+- Segurança na compra.
+
+A plataforma deve parecer uma concessionária de motocicletas contemporânea, com linguagem visual de marcas de performance, automobilismo e tecnologia.
+
+Não utilizar estética de marketplace genérico.
+
+Não utilizar visual de sistema administrativo tradicional como identidade da vitrine.
+
+Não utilizar cores excessivamente variadas.
+
+Não utilizar componentes excessivamente arredondados.
+
+Não utilizar emojis.
+
+Não utilizar elementos visuais infantis, genéricos ou excessivamente decorativos.
+
+---
+
+# 4. DESIGN SYSTEM PALAZZO
+
+## 4.1. PALETA DE CORES
+
+Criar os tokens de cores globais e utilizá-los em todos os componentes.
+
+### Backgrounds
+
+--color-background: #080909;
+--color-background-alt: #0D0F0F;
+--color-surface: #141515;
+--color-surface-elevated: #1C1F1F;
+--color-surface-hover: #252727;
+
+### Borders
+
+--color-border: #303434;
+--color-border-subtle: #242727;
+--color-border-strong: #505555;
+
+### Brand
+
+--color-primary: #B7F21B;
+--color-primary-hover: #D0FF36;
+--color-primary-active: #8AB90B;
+--color-primary-muted: rgba(183, 242, 27, 0.12);
+
+### Text
+
+--color-text-primary: #F3F3F3;
+--color-text-secondary: #858989;
+--color-text-muted: #5D6262;
+--color-text-on-primary: #101010;
+
+### Status
+
+--color-success: #B7F21B;
+--color-warning: #F3B43C;
+--color-danger: #F15B5B;
+--color-info: #7CC8FF;
+
+O verde-limão deve ser o principal elemento de destaque da interface.
+
+Utilizar o verde em:
+
+- Botões principais.
+- Preços promocionais.
+- Status disponíveis.
+- Destaques.
+- Indicadores.
+- Elementos gráficos.
+- Hover states.
+- CTA.
+- Linhas e recortes decorativos.
+- Categorias selecionadas.
+
+Evitar grandes áreas verdes desnecessárias.
+
+Manter a maior parte da experiência em preto, grafite e cinza.
+
+## 4.2. TIPOGRAFIA
+
+Fonte para headlines:
+
+SU GROTESK GRAND
+
+Utilizar a fonte original se houver arquivo disponível e licença compatível.
+
+Fallback recomendado:
+
+Sora.
+
+Fonte para interface e textos:
+
+Montserrat.
+
+Utilizar:
+
+- Headline: ExtraBold ou Bold.
+- Títulos de seção: Bold.
+- Cards: Semibold.
+- Corpo: Regular.
+- Labels: Medium.
+- Botões: Semibold.
+
+Preferir títulos em caixa alta.
+
+Utilizar tracking negativo em títulos grandes.
+
+A tipografia deve ter personalidade geométrica, tecnológica e automotiva, mantendo alta legibilidade.
+
+## 4.3. ESCALA
+
+Desktop:
+
+- Hero: 72–112px.
+- Títulos: 44–64px.
+- Subtítulos: 22–28px.
+- Cards: 20–28px.
+- Preços: 34–48px.
+- Corpo: 16–18px.
+- Labels: 12–14px.
+
+Mobile:
+
+- Hero: 42–60px.
+- Títulos: 30–40px.
+- Subtítulos: 18–22px.
+- Cards: 18–24px.
+- Preços: 28–36px.
+- Corpo: 14–16px.
+- Labels: 11–13px.
+
+Utilizar escala fluida com clamp().
+
+## 4.4. ESPAÇAMENTO
+
+Criar sistema consistente baseado em 4px.
+
+Tokens:
+
+4px
+8px
+12px
+16px
+20px
+24px
+32px
+40px
+48px
+64px
+80px
+96px
+120px
+
+Desktop deve ter mais respiro.
+
+Mobile deve reduzir espaços sem perder hierarquia.
+
+## 4.5. BORDAS
+
+- Botões: 8px.
+- Cards: 12px.
+- Inputs: 8px.
+- Modal: 14px.
+- Containers: 16px.
+- Badges: 4px ou pill.
+- Imagens: 8–12px.
+
+Evitar arredondamento exagerado.
+
+## 4.6. ELEMENTOS GRÁFICOS
+
+Utilizar:
+
+- Chevron.
+- Linhas diagonais.
+- Barras.
+- Recortes geométricos.
+- Pattern quadriculado.
+- Linhas de velocidade.
+- Halo verde.
+- Gradientes escuros.
+- Molduras angulares.
+- Divisores.
+- Numeração técnica.
+- Elementos inspirados em motorsport.
+- Detalhes metálicos discretos.
+- Texturas sutis.
+
+Não utilizar todos os elementos simultaneamente.
+
+Cada composição deve possuir hierarquia.
+
+## 4.7. ÍCONES
+
+Utilizar Lucide Icons.
+
+Ícones em branco ou cinza.
+
+Ícones selecionados podem utilizar verde.
+
+Não misturar diferentes bibliotecas de ícones.
+
+Não utilizar emojis.
+
+---
+
+# 5. ARQUITETURA TÉCNICA
+
+Construir utilizando uma arquitetura moderna, organizada e preparada para manutenção.
+
+Stack preferencial:
+
+- Next.js.
+- TypeScript.
+- Tailwind CSS.
+- shadcn/ui.
+- Supabase.
+- PostgreSQL.
+- Supabase Auth.
+- Supabase Storage.
+- React Hook Form.
+- Zod.
+- Lucide Icons.
+- Motion ou Framer Motion.
+- Vercel.
+
+Priorizar compatibilidade com deploy na Vercel.
+
+Organizar o código em componentes reutilizáveis.
+
+Separar:
+
+- Frontend público.
+- Painel administrativo.
+- Componentes.
+- Serviços.
+- Repositórios de dados.
+- Formulários.
+- Tipos.
+- Validação.
+- Configurações.
+- Hooks.
+- Utilitários.
+
+Não criar uma única página gigantesca com toda a lógica.
+
+Não criar mockups que simulem funcionalidades inexistentes.
+
+Todas as ações que aparentarem funcionar devem estar realmente implementadas.
+
+---
+
+# 6. ESTRUTURA DE ROTAS
+
+Criar a seguinte estrutura:
+
+/
+
+Página inicial pública.
+
+ /motos
+
+Catálogo completo de motos.
+
+ /motos/[slug]
+
+Página individual da motocicleta.
+
+ /categoria/[slug]
+
+Página de categoria.
+
+ /admin/login
+
+Login administrativo.
+
+ /admin
+
+Dashboard.
+
+ /admin/motos
+
+Gestão do estoque.
+
+ /admin/motos/nova
+
+Cadastro.
+
+ /admin/motos/[id]
+
+Editar moto.
+
+ /admin/categorias
+
+Gerenciar categorias.
+
+ /admin/banners
+
+Gerenciar banners.
+
+ /admin/site
+
+Configurações da vitrine.
+
+ /admin/configuracoes
+
+Configurações gerais.
+
+Todas as rotas administrativas devem exigir autenticação.
+
+---
+
+# 7. VITRINE PÚBLICA
+
+A vitrine deve ser uma experiência de navegação premium.
+
+A prioridade é:
+
+1. Apresentar as motos visualmente.
+2. Facilitar encontrar uma moto.
+3. Mostrar informações importantes.
+4. Incentivar contato.
+5. Direcionar para WhatsApp.
+6. Transmitir confiança.
+7. Facilitar a descoberta do estoque.
+
+## 7.1. HEADER
+
+Criar um header moderno.
+
+Desktop:
+
+- Logotipo.
+- Início.
+- Motos.
+- Categorias.
+- Ofertas.
+- Sobre.
+- Contato.
+- Busca.
+- WhatsApp.
+
+Mobile:
+
+- Logotipo.
+- Botão de menu.
+- Busca ou ícone de busca.
+- CTA de contato opcional.
+
+O header pode ser sticky.
+
+Implementar transição sutil ao rolar.
+
+Não ocupar espaço excessivo.
+
+## 7.2. HERO
+
+Criar um hero cinematográfico, premium e editorial.
+
+O hero deve possuir:
+
+- Imagem ou composição principal.
+- Headline.
+- Subheadline.
+- CTA.
+- Elementos geométricos verdes.
+- Gradiente de contraste.
+- Possível textura.
+- Layout adaptável.
+
+Texto padrão:
+
+SUA PRÓXIMA
+MÁQUINA ESTÁ AQUI.
+
+Subtexto:
+
+Encontre a moto que acompanha teu próximo movimento.
+
+CTA:
+
+EXPLORAR MOTOS
+
+CTA secundário:
+
+FALAR COM A PALAZZO
+
+O hero deve ser completamente editável pelo painel administrativo.
+
+Campos:
+
+- Headline.
+- Subheadline.
+- Imagem desktop.
+- Imagem mobile.
+- CTA primário.
+- Link primário.
+- CTA secundário.
+- Link secundário.
+- Status.
+- Ordem.
+
+Se não houver imagem cadastrada, utilizar uma composição alternativa elegante, sem quebrar o layout.
+
+## 7.3. CATEGORIAS
+
+Criar categorias visuais.
+
+Categorias iniciais sugeridas:
+
+- Todas.
+- Street.
+- Naked.
+- Esportiva.
+- Trail.
+- Scooter.
+- Custom.
+- Off-road.
+
+Essas categorias são apenas uma configuração inicial e devem ser editáveis.
+
+Cada categoria possui:
+
+- Nome.
+- Slug.
+- Descrição.
+- Imagem.
+- Ordem.
+- Status ativo.
+
+Criar cards ou blocos horizontais.
+
+Possibilitar filtro por categoria ao clicar.
+
+## 7.4. SEÇÃO DE DESTAQUES
+
+Título:
+
+MÁQUINAS EM DESTAQUE
+
+Criar grid responsivo.
+
+Exibir apenas motocicletas que:
+
+- Estão publicadas.
+- Estão disponíveis.
+- Estão marcadas como destaque.
+
+O administrador deve controlar o destaque diretamente pelo cadastro da moto.
+
+Não inventar veículos.
+
+Não utilizar dados fictícios no ambiente de produção.
+
+## 7.5. CATÁLOGO
+
+Título:
+
+NOSSO ESTOQUE
+
+Subtítulo:
+
+Explore as máquinas disponíveis na Palazzo.
+
+Criar catálogo conectado ao Supabase.
+
+Implementar:
+
+- Busca.
+- Filtros.
+- Ordenação.
+- Paginação.
+- Cards.
+- Loading states.
+- Empty states.
+- Tratamento de erro.
+
+Filtros:
+
+- Marca.
+- Categoria.
+- Ano.
+- Cilindrada.
+- Preço.
+- Quilometragem.
+- Condição.
+
+Ordenação:
+
+- Recentes.
+- Menor preço.
+- Maior preço.
+- Menor KM.
+- Ano mais novo.
+
+Não deixar filtros estáticos.
+
+Todos os filtros devem funcionar com os dados reais.
+
+## 7.6. CARDS
+
+Cada card deverá apresentar:
+
+- Imagem.
+- Marca.
+- Modelo.
+- Versão.
+- Ano.
+- KM.
+- Cilindrada.
+- Preço.
+- Badge.
+- Status.
+- CTA.
+
+O card deve possuir:
+
+- Hover desktop.
+- Feedback visual.
+- Transições.
+- Imagens otimizadas.
+- Responsividade.
+
+A imagem deve possuir uma área padronizada, mantendo o veículo visualmente centralizado.
+
+Não distorcer imagens.
+
+Utilizar object-fit de maneira apropriada.
+
+Evitar que as imagens de motos sejam cortadas de forma inadequada.
+
+## 7.7. CTA
+
+Criar CTAs:
+
+- VER DETALHES.
+- TENHO INTERESSE.
+- FALAR NO WHATSAPP.
+- VER TODAS AS MOTOS.
+
+O WhatsApp deve ser configurável no painel.
+
+Utilizar número com formato internacional correto.
+
+Gerar mensagens personalizadas dinamicamente.
+
+Exemplo:
+
+Olá! Vi a {{marca}} {{modelo}} {{ano}} no site da Palazzo Motos e gostaria de saber mais informações.
+
+Utilizar encodeURIComponent corretamente.
+
+---
+
+# 8. PÁGINA INDIVIDUAL DA MOTO
+
+Criar rota dinâmica para cada veículo.
+
+URL:
+
+/motos/[slug]
+
+A página deve possuir:
+
+- Galeria.
+- Foto principal.
+- Fotos secundárias.
+- Zoom.
+- Navegação entre fotos.
+- Swipe mobile.
+- Nome.
+- Marca.
+- Modelo.
+- Versão.
+- Ano.
+- KM.
+- Cilindrada.
+- Cor.
+- Combustível.
+- Transmissão.
+- Descrição.
+- Preço.
+- Preço promocional.
+- Informações de pagamento.
+- Condição.
+- Badge.
+- CTA WhatsApp.
+- Motos relacionadas.
+
+O layout deve possuir hierarquia clara.
+
+Desktop:
+
+Galeria ocupando uma área relevante.
+
+Informações comerciais em coluna lateral.
+
+Mobile:
+
+Galeria no topo.
+
+Informações em sequência.
+
+CTA de contato acessível.
+
+Opcionalmente, criar um CTA fixo inferior em mobile, respeitando a área segura do dispositivo.
+
+## GALERIA
+
+Permitir:
+
+- Múltiplas fotos.
+- Thumbnail.
+- Foto de capa.
+- Navegação.
+- Zoom.
+- Lightbox.
+- Swipe.
+
+## MOTO RELACIONADAS
+
+Buscar outras motos disponíveis.
+
+Preferir:
+
+- Mesma categoria.
+- Faixa de preço semelhante.
+- Marca relacionada.
+
+---
+
+# 9. PAINEL ADMINISTRATIVO
+
+O painel administrativo é uma parte essencial do produto.
+
+Ele deve ser independente da vitrine pública, mas utilizar o mesmo banco de dados.
+
+URL:
+
+/admin
+
+O proprietário deve conseguir utilizá-lo sem conhecimento técnico.
+
+Criar uma interface simples, organizada e responsiva.
+
+## 9.1. LOGIN
+
+Criar login com Supabase Auth.
+
+Campos:
+
+- E-mail.
+- Senha.
+
+Implementar:
+
+- Login.
+- Logout.
+- Recuperação de senha.
+- Persistência de sessão.
+- Proteção de rotas.
+- Feedback de erros.
+
+Não criar autenticação falsa.
+
+Não armazenar senhas manualmente.
+
+## 9.2. DASHBOARD
+
+Mostrar:
+
+- Total de veículos.
+- Disponíveis.
+- Vendidos.
+- Reservados.
+- Ocultos.
+- Destaques.
+
+Criar gráficos ou indicadores simples quando forem úteis.
+
+Mostrar:
+
+- Últimas motos cadastradas.
+- Últimas alterações.
+- Ações rápidas.
+
+CTA principal:
+
++ ADICIONAR MOTO
+
+O dashboard deve evitar excesso de gráficos e informações irrelevantes.
+
+Priorizar operações rápidas.
+
+## 9.3. LISTAGEM DE MOTOS
+
+Criar tabela ou grid administrativo.
+
+Mostrar:
+
+- Foto.
+- Nome.
+- Marca.
+- Ano.
+- Preço.
+- Status.
+- Destaque.
+- Publicação.
+- Última atualização.
+
+Ações:
+
+- Editar.
+- Duplicar.
+- Excluir.
+- Publicar.
+- Ocultar.
+- Marcar destaque.
+- Marcar vendida.
+- Reativar.
+
+Implementar:
+
+- Busca.
+- Filtro.
+- Ordenação.
+- Paginação.
+
+## 9.4. CADASTRO DE MOTO
+
+Criar formulário dividido em etapas ou grupos.
+
+### GRUPO 1 — IDENTIFICAÇÃO
+
+- Nome.
+- Marca.
+- Modelo.
+- Versão.
+- Categoria.
+- Ano de fabricação.
+- Ano modelo.
+- Cor.
+
+### GRUPO 2 — ESPECIFICAÇÕES
+
+- Cilindrada.
+- Quilometragem.
+- Combustível.
+- Transmissão.
+- Potência.
+- Número de cilindros.
+- Características.
+
+Campos técnicos podem ser opcionais.
+
+### GRUPO 3 — COMERCIAL
+
+- Preço.
+- Preço anterior.
+- Informações de pagamento.
+- Entrada.
+- Parcelamento.
+- Texto promocional.
+
+### GRUPO 4 — IMAGENS
+
+- Upload múltiplo.
+- Drag and drop.
+- Preview.
+- Ordenação.
+- Remoção.
+- Definir capa.
+
+### GRUPO 5 — PUBLICAÇÃO
+
+- Disponível.
+- Reservada.
+- Vendida.
+- Oculta.
+
+- Publicada.
+- Destaque.
+- Badge.
+- Ordem.
+
+## 9.5. CADASTRO RÁPIDO
+
+Criar uma forma de cadastrar uma moto rapidamente.
+
+Campos mínimos:
+
+- Marca.
+- Modelo.
+- Ano.
+- Preço.
+- Foto.
+
+Permitir salvar como rascunho e completar depois.
+
+## 9.6. EDITAR
+
+Permitir editar qualquer campo.
+
+Mostrar claramente:
+
+- Salvo.
+- Salvando.
+- Erro.
+- Publicado.
+- Rascunho.
+
+Implementar validação.
+
+Não permitir perda de dados por erro de rede.
+
+## 9.7. DUPLICAR
+
+Permitir duplicar motocicleta.
+
+Ao duplicar:
+
+- Copiar os campos.
+- Gerar novo ID.
+- Gerar novo slug.
+- Não duplicar status como vendida.
+- Não publicar automaticamente.
+- Permitir editar antes de salvar.
+
+## 9.8. EXCLUIR
+
+Exclusão com confirmação.
+
+Informar que a ação é permanente.
+
+Se possível, implementar arquivamento ou exclusão lógica antes da exclusão definitiva.
+
+---
+
+# 10. GERENCIAMENTO DE IMAGENS
+
+Utilizar Supabase Storage.
+
+Permitir:
+
+- Upload múltiplo.
+- Preview.
+- Reordenar.
+- Remover.
+- Definir capa.
+- Alt text.
+- Indicador de upload.
+- Tratamento de erros.
+
+Criar bucket apropriado para imagens de veículos.
+
+Sugestão:
+
+motorcycles
+
+Estrutura de arquivos organizada por UUID de veículo.
+
+Não utilizar nomes de arquivos que dependam de informações pessoais.
+
+O sistema deve otimizar imagens.
+
+Preferir WebP quando possível.
+
+Evitar uploads gigantescos.
+
+Configurar limites.
+
+Garantir que a imagem principal seja utilizada nos cards e nas páginas de detalhes.
+
+Garantir limpeza de arquivos órfãos.
+
+---
+
+# 11. GERENCIAMENTO DE CATEGORIAS
+
+Criar CRUD completo.
+
+Campos:
+
+- Nome.
+- Slug.
+- Descrição.
+- Imagem.
+- Ordem.
+- Ativa.
+
+Permitir:
+
+- Criar.
+- Editar.
+- Excluir.
+- Desativar.
+- Reordenar.
+
+Se uma categoria possuir motos cadastradas, ao excluir deverá existir um tratamento seguro, impedindo perda inesperada de dados.
+
+---
+
+# 12. BANNERS E CAMPANHAS
+
+Criar painel para gerenciamento de banners.
+
+Campos:
+
+- Título.
+- Subtítulo.
+- Imagem desktop.
+- Imagem mobile.
+- CTA.
+- Link.
+- Ordem.
+- Ativo.
+
+Permitir:
+
+- Criar.
+- Editar.
+- Excluir.
+- Ativar.
+- Desativar.
+- Reordenar.
+
+A vitrine deve buscar os banners ativos no banco de dados.
+
+Não utilizar banners hardcoded.
+
+---
+
+# 13. EDITOR DE CONTEÚDO DO SITE
+
+Criar uma área chamada:
+
+PERSONALIZAR VITRINE
+
+Permitir editar:
+
+- Headline do hero.
+- Subheadline.
+- Imagem desktop.
+- Imagem mobile.
+- CTA.
+- Link.
+- Texto institucional.
+- WhatsApp.
+- Telefone.
+- Instagram.
+- Endereço.
+- Horário de funcionamento.
+- Seções ativas.
+- Ordem das seções.
+
+Implementar controles de exibição.
+
+Permitir ativar e desativar:
+
+- Hero.
+- Categorias.
+- Destaques.
+- Catálogo.
+- Banner promocional.
+- Sobre a Palazzo.
+- CTA final.
+
+Manter o design system protegido.
+
+O administrador não deve conseguir destruir a identidade visual alterando livremente todas as cores e fontes.
+
+---
+
+# 14. SUPABASE — BACKEND
+
+Utilizar Supabase como backend principal.
+
+Criar:
+
+- Database.
+- Authentication.
+- Storage.
+- RLS.
+- Policies.
+- Migrations.
+- Tipos TypeScript.
+- Integração com frontend.
+
+Não utilizar dados simulados como solução final.
+
+Não armazenar veículos em arrays locais permanentes.
+
+Não depender de localStorage como banco de dados.
+
+## 14.1. TABELA MOTORCYCLES / MOTORCYCLES OU MOTORCYCLES
+
+Utilizar uma tabela chamada motorcycles.
+
+Campos recomendados:
+
+id UUID PRIMARY KEY DEFAULT gen_random_uuid()
+
+slug TEXT UNIQUE NOT NULL
+
+name TEXT NOT NULL
+
+brand TEXT NOT NULL
+
+model TEXT NOT NULL
+
+version TEXT
+
+category_id UUID REFERENCES categories(id)
+
+year_manufacture INTEGER
+
+year_model INTEGER
+
+engine_cc INTEGER
+
+mileage INTEGER
+
+color TEXT
+
+fuel TEXT
+
+transmission TEXT
+
+power TEXT
+
+description TEXT
+
+price NUMERIC(12,2)
+
+old_price NUMERIC(12,2)
+
+payment_info TEXT
+
+status TEXT DEFAULT 'available'
+
+featured BOOLEAN DEFAULT false
+
+published BOOLEAN DEFAULT false
+
+badge TEXT
+
+sort_order INTEGER DEFAULT 0
+
+created_at TIMESTAMPTZ DEFAULT NOW()
+
+updated_at TIMESTAMPTZ DEFAULT NOW()
+
+Implementar validações.
+
+Criar índices para campos utilizados em busca, filtro e ordenação.
+
+Garantir slug único.
+
+Implementar updated_at automaticamente.
+
+## 14.2. TABELA MOTORCYCLE_IMAGES
+
+Campos:
+
+id UUID PRIMARY KEY DEFAULT gen_random_uuid()
+
+motorcycle_id UUID REFERENCES motorcycles(id) ON DELETE CASCADE
+
+storage_path TEXT NOT NULL
+
+alt_text TEXT
+
+sort_order INTEGER DEFAULT 0
+
+is_cover BOOLEAN DEFAULT false
+
+created_at TIMESTAMPTZ DEFAULT NOW()
+
+## 14.3. TABELA CATEGORIES
+
+Campos:
+
+id UUID PRIMARY KEY DEFAULT gen_random_uuid()
+
+name TEXT NOT NULL
+
+slug TEXT UNIQUE NOT NULL
+
+description TEXT
+
+image_path TEXT
+
+sort_order INTEGER DEFAULT 0
+
+active BOOLEAN DEFAULT true
+
+created_at TIMESTAMPTZ DEFAULT NOW()
+
+## 14.4. TABELA SITE_SETTINGS
+
+Criar tabela de configurações da vitrine.
+
+Permitir armazenar:
+
+- Nome da empresa.
+- Logotipo.
+- WhatsApp.
+- Telefone.
+- Instagram.
+- Endereço.
+- Horários.
+- Hero.
+- Textos.
+- SEO.
+- Preferências de layout.
+
+Utilizar estrutura organizada.
+
+Evitar campos desnecessários.
+
+## 14.5. TABELA BANNERS
+
+Campos:
+
+id UUID
+
+title TEXT
+
+subtitle TEXT
+
+image_desktop TEXT
+
+image_mobile TEXT
+
+cta_text TEXT
+
+cta_url TEXT
+
+active BOOLEAN
+
+sort_order INTEGER
+
+created_at TIMESTAMPTZ
+
+---
+
+# 15. SEGURANÇA E RLS
+
+Implementar Row Level Security em todas as tabelas relevantes.
+
+## POLÍTICA PÚBLICA
+
+Usuários não autenticados podem:
+
+- Consultar categorias ativas.
+- Consultar motos publicadas.
+- Consultar motos disponíveis.
+- Consultar banners ativos.
+- Consultar configurações públicas.
+
+Usuários não autenticados NÃO podem:
+
+- Criar registros.
+- Editar registros.
+- Excluir registros.
+- Modificar preços.
+- Alterar status.
+- Modificar banners.
+- Fazer upload privado.
+- Acessar informações administrativas.
+
+## POLÍTICA ADMINISTRATIVA
+
+Somente usuários autorizados e autenticados poderão:
+
+- Criar motos.
+- Editar motos.
+- Excluir motos.
+- Gerenciar categorias.
+- Gerenciar banners.
+- Gerenciar configurações.
+- Upload de imagens.
+- Alterar status.
+
+Implementar policies verificadas no banco.
+
+Não depender somente de esconder botões no frontend.
+
+Nunca expor SUPABASE_SERVICE_ROLE_KEY no navegador.
+
+Utilizar variáveis de ambiente.
+
+---
+
+# 16. SUPABASE STORAGE
+
+Criar buckets necessários.
+
+Bucket:
+
+motorcycles
+
+Bucket:
+
+site-assets
+
+Definir policies.
+
+As imagens públicas da vitrine podem utilizar URLs públicas se isso for apropriado para o projeto.
+
+O gerenciamento e upload devem ser autenticados.
+
+Criar estrutura de upload organizada.
+
+Implementar exclusão de imagens.
+
+Implementar atualização de imagens sem perder as fotos existentes.
+
+---
+
+# 17. EXPERIÊNCIA MOBILE
+
+A aplicação deve ser desenvolvida MOBILE-FIRST.
+
+Breakpoints:
+
+- Mobile: 360–767px.
+- Tablet: 768–1023px.
+- Desktop: 1024px ou mais.
+
+## MOBILE
+
+- Layout adaptado.
+- Navegação simples.
+- Header compacto.
+- Cards com leitura confortável.
+- Grid de 1 ou 2 colunas.
+- CTA acessível.
+- Filtros em drawer.
+- Galeria com swipe.
+- Imagens sem corte.
+- Menu de fácil navegação.
+- Botões com área de toque adequada.
+- Sem overflow horizontal.
+- Sem elementos sobrepostos.
+
+## TABLET
+
+- Layout de 2 ou 3 colunas.
+- Hero adaptado.
+- Navegação apropriada.
+- Filtros acessíveis.
+- Espaçamentos intermediários.
+
+## DESKTOP
+
+- Hero cinematográfico.
+- Grid de 3 ou 4 cards.
+- Navegação horizontal.
+- Composições assimétricas.
+- Hover states.
+- Filtros visíveis quando apropriado.
+- Mais espaço de composição.
+
+Testar especificamente em:
+
+360px
+390px
+430px
+768px
+1024px
+1440px
+1920px
+
+---
+
+# 18. ANIMAÇÕES
+
+Utilizar Motion ou Framer Motion.
+
+Implementar:
+
+- Entrada suave.
+- Fade.
+- Slide.
+- Reveal.
+- Stagger de cards.
+- Hover de card.
+- Hover de CTA.
+- Transição de página.
+- Menu.
+- Modal.
+- Galeria.
+
+As animações devem ser sofisticadas, curtas e discretas.
+
+Não comprometer performance.
+
+Implementar suporte a prefers-reduced-motion.
+
+Evitar exageros.
+
+A experiência precisa continuar rápida e funcional.
+
+---
+
+# 19. WHATSAPP
+
+Configurar WhatsApp através do painel.
+
+Campo:
+
+whatsapp_number
+
+Permitir que o administrador configure o número.
+
+Todos os CTAs de WhatsApp devem utilizar a configuração centralizada.
+
+Criar mensagens automáticas contextualizadas.
+
+Exemplos:
+
+### CTA GERAL
+
+Olá! Gostaria de conhecer as motos disponíveis na Palazzo Motos.
+
+### CTA DE MOTO
+
+Olá! Tenho interesse na {{brand}} {{model}} {{year_model}} que vi no site da Palazzo Motos. Gostaria de mais informações.
+
+### CTA DE FINANCIAMENTO
+
+Olá! Gostaria de consultar as condições de pagamento e financiamento da {{brand}} {{model}}.
+
+Utilizar URL apropriada para WhatsApp.
+
+Não duplicar números em diferentes componentes.
+
+---
+
+# 20. SEO
+
+Implementar SEO técnico.
+
+- Metadata dinâmica.
+- Title.
+- Description.
+- Open Graph.
+- Imagem social.
+- Sitemap.
+- Robots.
+- Canonical.
+- URLs amigáveis.
+- Alt text.
+- Dados estruturados quando aplicáveis.
+- Performance.
+- Indexação.
+
+Cada moto deverá possuir título e descrição específicos.
+
+---
+
+# 21. PERFORMANCE
+
+O projeto deve ser rápido.
+
+Implementar:
+
+- Otimização de imagens.
+- Lazy loading.
+- Loading states.
+- Paginação.
+- Cache.
+- Revalidação.
+- Consultas eficientes.
+- Índices no banco.
+- Componentes leves.
+- Evitar dependências desnecessárias.
+- Evitar carregamento de dados não utilizados.
+- Evitar renderizações excessivas.
+
+A página de catálogo deve funcionar bem mesmo com centenas de motocicletas.
+
+---
+
+# 22. ESTADOS DA APLICAÇÃO
+
+Implementar corretamente:
+
+- Loading.
+- Empty state.
+- Error state.
+- Success state.
+- Skeleton.
+- Upload progress.
+- Save progress.
+- Network failure.
+- Retry.
+- Confirmation dialogs.
+
+Exemplo:
+
+Quando não houver motos:
+
+"AINDA NÃO TEMOS MOTOS POR AQUI."
+
+"Novas máquinas estão chegando. Volte em breve."
+
+CTA:
+
+FALAR COM A PALAZZO
+
+Não mostrar uma tela vazia sem explicação.
+
+---
+
+# 23. DADOS DEMONSTRATIVOS
+
+Não inserir motos fictícias no estoque de produção.
+
+Se for necessário para o desenvolvimento, criar dados demonstrativos claramente identificados como DEMO.
+
+Esses dados devem ser facilmente removidos.
+
+Não utilizar motos inventadas como se fossem veículos reais da Palazzo.
+
+Não utilizar preços fictícios em produção.
+
+Não deixar banners de demonstração ativos.
+
+---
+
+# 24. EXPERIÊNCIA ADMINISTRATIVA
+
+O proprietário deve conseguir:
+
+1. Entrar.
+2. Visualizar estoque.
+3. Cadastrar uma moto.
+4. Adicionar fotos.
+5. Editar preço.
+6. Alterar descrição.
+7. Publicar.
+8. Destacar.
+9. Marcar como vendida.
+10. Ocultar.
+11. Reativar.
+12. Gerenciar categorias.
+13. Atualizar banners.
+14. Atualizar WhatsApp.
+15. Alterar conteúdo da vitrine.
+
+Toda a experiência deve ser visual e simples.
+
+Evitar termos técnicos.
+
+Priorizar ações claras.
+
+---
+
+# 25. ESTRUTURA DE COMPONENTES
+
+Organizar componentes como:
+
+Header
+
+MobileMenu
+
+HeroSection
+
+CategorySection
+
+FeaturedMotorcycles
+
+MotorcycleCatalog
+
+MotorcycleCard
+
+MotorcycleFilters
+
+SearchBar
+
+MotorcycleGallery
+
+MotorcycleDetails
+
+RelatedMotorcycles
+
+WhatsAppButton
+
+CTASection
+
+Footer
+
+AdminSidebar
+
+AdminDashboard
+
+MotorcycleTable
+
+MotorcycleForm
+
+ImageUploader
+
+CategoryManager
+
+BannerManager
+
+SiteSettingsForm
+
+ConfirmDialog
+
+ToastSystem
+
+EmptyState
+
+LoadingState
+
+ErrorState
+
+Criar componentes reutilizáveis.
+
+Evitar duplicação de código.
+
+---
+
+# 26. ORGANIZAÇÃO DE CÓDIGO
+
+Organizar de maneira modular.
+
+Separar:
+
+- app/
+- components/
+- components/ui/
+- components/storefront/
+- components/admin/
+- lib/
+- lib/supabase/
+- lib/validations/
+- services/
+- hooks/
+- types/
+- styles/
+
+Criar:
+
+- Supabase client público.
+- Supabase client server.
+- Auth helpers.
+- Queries.
+- Mutations.
+- Schemas Zod.
+- Types.
+
+Não misturar componentes de vitrine e admin sem necessidade.
+
+---
+
+# 27. IMPLEMENTAÇÃO POR FASES
+
+Não tentar construir tudo de forma desorganizada em uma única etapa.
+
+## FASE 1 — FUNDAÇÃO
+
+- Criar projeto.
+- Configurar stack.
+- Criar estrutura.
+- Configurar Tailwind.
+- Implementar tokens.
+- Implementar fontes.
+- Implementar componentes básicos.
+- Configurar Supabase.
+- Configurar variáveis de ambiente.
+
+## FASE 2 — BANCO DE DADOS
+
+- Criar migrations.
+- Criar tabelas.
+- Criar relacionamentos.
+- Criar índices.
+- Criar RLS.
+- Criar policies.
+- Criar buckets.
+- Configurar Storage.
+- Validar conexão.
+
+## FASE 3 — PAINEL ADMIN
+
+- Login.
+- Dashboard.
+- Estoque.
+- Cadastro.
+- Edição.
+- Upload.
+- Categorias.
+- Status.
+- Destaques.
+
+Garantir que todas as operações funcionem com Supabase.
+
+## FASE 4 — VITRINE
+
+- Header.
+- Hero.
+- Categorias.
+- Destaques.
+- Catálogo.
+- Busca.
+- Filtros.
+- Cards.
+- Detalhes.
+- WhatsApp.
+- Footer.
+
+## FASE 5 — PERSONALIZAÇÃO
+
+- Banners.
+- Textos.
+- WhatsApp.
+- Informações da loja.
+- Configurações de conteúdo.
+- Controle de seções.
+
+## FASE 6 — RESPONSIVIDADE
+
+Testar mobile.
+
+Testar tablet.
+
+Testar desktop.
+
+Corrigir overflow.
+
+Corrigir imagens.
+
+Corrigir navegação.
+
+## FASE 7 — TESTES
+
+Testar:
+
+- Login.
+- Logout.
+- Proteção de rotas.
+- Cadastro.
+- Edição.
+- Exclusão.
+- Duplicação.
+- Upload.
+- Reordenação.
+- Publicação.
+- Despublicação.
+- Status.
+- Destaque.
+- Busca.
+- Filtros.
+- WhatsApp.
+- Categorias.
+- Banners.
+- Configurações.
+
+## FASE 8 — PRODUÇÃO
+
+Preparar:
+
+- Deploy Vercel.
+- Domínio.
+- Variáveis.
+- Supabase.
+- Storage.
+- SEO.
+- Sitemap.
+- Performance.
+- Segurança.
+
+---
+
+# 28. CRITÉRIOS DE ACEITAÇÃO
+
+O projeto só deve ser considerado concluído quando:
+
+- O design estiver consistente com a Palazzo.
+- O logo original estiver preservado.
+- O catálogo estiver conectado ao banco.
+- O proprietário conseguir cadastrar motos.
+- O proprietário conseguir editar motos.
+- O proprietário conseguir excluir motos.
+- O proprietário conseguir subir fotos.
+- O proprietário conseguir alterar status.
+- O proprietário conseguir destacar motos.
+- O proprietário conseguir gerenciar categorias.
+- O proprietário conseguir gerenciar banners.
+- O proprietário conseguir editar o WhatsApp.
+- O catálogo refletir as mudanças feitas no painel.
+- As motos não publicadas não aparecerem publicamente.
+- O login administrativo estiver funcionando.
+- O RLS estiver corretamente configurado.
+- O Storage estiver protegido.
+- A vitrine estiver responsiva.
+- Os filtros funcionarem.
+- Os CTAs funcionarem.
+- O WhatsApp abrir com mensagem contextualizada.
+- Não existirem botões falsos.
+- Não existirem dados fictícios de produção.
+- Não existirem erros críticos.
+- O deploy funcionar.
+
+---
+
+# 29. INSTRUÇÃO FINAL AO AGENTE
+
+Antes de começar, analise cuidadosamente todas as imagens de referência anexadas.
+
+Não ignore o logotipo.
+
+Não crie uma interface genérica.
+
+Não transforme a plataforma em um marketplace.
+
+Não faça apenas uma landing page.
+
+O projeto é uma plataforma completa de vitrine digital e gerenciamento de estoque da Palazzo Motos.
+
+Priorize:
+
+1. Identidade visual.
+2. Design System consistente.
+3. Experiência de compra.
+4. Facilidade administrativa.
+5. Mobile.
+6. Supabase.
+7. Segurança.
+8. Performance.
+9. Escalabilidade.
+10. Facilidade de manutenção.
+
+Construa um produto visualmente premium e funcional.
+
+A interface deve parecer um projeto desenvolvido por uma equipe de design e engenharia de produto especializada em experiências automotivas.
+
+Não entregue somente telas.
+
+Entregue um sistema funcional.
+
+Comece pela fundação, banco de dados, arquitetura e design system. Em seguida, construa o painel administrativo conectado ao Supabase e, por último, a vitrine pública consumindo os dados reais.
+
+Ao finalizar cada fase, verifique o funcionamento antes de prosseguir.
+
+Não invente funcionalidades que não estejam implementadas.
+
+Não declare concluída uma integração sem testar.
+
+Documente a estrutura, as variáveis de ambiente, as migrations, os buckets, as policies e o processo de deploy.
+
+O resultado final deve permitir que a Palazzo Motos tenha autonomia total para administrar sua vitrine digital diariamente.
