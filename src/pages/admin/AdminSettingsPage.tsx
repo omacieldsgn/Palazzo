@@ -69,7 +69,7 @@ export function AdminSettingsPage() {
                 required
                 value={settings.whatsappNumber}
                 onChange={(e) => setSettings({ ...settings, whatsappNumber: e.target.value })}
-                placeholder="Ex: 5511999999999"
+                placeholder="Ex: 5551999422491"
                 className="w-full h-11 px-3 rounded-lg bg-[#0D0F0F] border border-[#303434] text-sm text-[#F3F3F3] font-mono-tabular"
               />
               <a

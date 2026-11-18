@@ -8,8 +8,8 @@ export const HERO_DEFAULT_IMAGE = '/src/assets/images/hero_palazzo_superbike_179
 export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   companyName: 'Palazzo Motos',
   logoUrl: PALAZZO_LOGO_PATH,
-  whatsappNumber: '5511999999999',
-  phone: '(11) 3456-7890',
+  whatsappNumber: '5551999422491',
+  phone: '(51) 99942-2491',
   instagram: '@palazzomotos',
   email: 'contato@palazzomotos.com.br',
   address: 'Av. das Nações Automotivas, 1480 — São Paulo, SP',
