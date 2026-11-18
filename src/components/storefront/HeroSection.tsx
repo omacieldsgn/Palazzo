@@ -13,6 +13,15 @@ interface HeroSectionProps {
 export function HeroSection({ settings, availableCount }: HeroSectionProps) {
   const desktopImg = settings.heroImageDesktop;
   const mobileImg = settings.heroImageMobile || settings.heroImageDesktop;
+  const showShadow = settings.heroOverlayShadow !== false;
+  const desktopFitClass =
+    settings.heroImageFit === 'contain' ? 'object-contain' : 'object-cover';
+  const desktopPos = settings.heroImagePosition || '50% 50%';
+  const mobileFitClass =
+    (settings.heroMobileImageFit || settings.heroImageFit) === 'contain'
+      ? 'object-contain'
+      : 'object-cover';
+  const mobilePos = settings.heroMobileImagePosition || desktopPos;
   const primaryText = settings.heroPrimaryCtaText || 'EXPLORAR MOTOS';
   const primaryUrl = settings.heroPrimaryCtaUrl || '/motos';
   const secondaryText = settings.heroSecondaryCtaText || 'FALAR COM A PALAZZO';
@@ -37,7 +46,10 @@ export function HeroSection({ settings, availableCount }: HeroSectionProps) {
                 src={desktopImg}
                 alt="Showroom Palazzo Motos"
                 loading="eager"
-                className="w-full h-full object-cover object-center opacity-70"
+                className={`w-full h-full ${desktopFitClass} ${
+                  showShadow ? 'opacity-70' : 'opacity-100'
+                }`}
+                style={{ objectPosition: desktopPos }}
               />
             </div>
             <div className="md:hidden w-full h-full">
@@ -45,7 +57,10 @@ export function HeroSection({ settings, availableCount }: HeroSectionProps) {
                 src={mobileImg}
                 alt="Showroom Palazzo Motos"
                 loading="eager"
-                className="w-full h-full object-cover object-center opacity-55"
+                className={`w-full h-full ${mobileFitClass} ${
+                  showShadow ? 'opacity-55' : 'opacity-100'
+                }`}
+                style={{ objectPosition: mobilePos }}
               />
             </div>
           </>
@@ -53,9 +68,13 @@ export function HeroSection({ settings, availableCount }: HeroSectionProps) {
           <div className="w-full h-full palazzo-grid-bg opacity-80" />
         )}
 
-        {/* Scrims ensuring >= 4.5:1 text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#080909] via-[#080909]/85 to-[#080909]/35" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#080909] via-transparent to-[#080909]/40" />
+        {/* Scrims ensuring >= 4.5:1 text legibility when enabled */}
+        {showShadow && (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#080909] via-[#080909]/85 to-[#080909]/35" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#080909] via-transparent to-[#080909]/40" />
+          </>
+        )}
 
         {/* Subtle controlled lime architectural edge */}
         <div

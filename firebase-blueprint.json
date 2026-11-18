@@ -335,6 +335,27 @@
           "type": "string",
           "maxLength": 600
         },
+        "heroOverlayShadow": {
+          "type": "boolean"
+        },
+        "heroImagePosition": {
+          "type": "string",
+          "maxLength": 32,
+          "pattern": "^[0-9]{1,3}% [0-9]{1,3}%$"
+        },
+        "heroImageFit": {
+          "type": "string",
+          "enum": ["cover", "contain"]
+        },
+        "heroMobileImagePosition": {
+          "type": "string",
+          "maxLength": 32,
+          "pattern": "^[0-9]{1,3}% [0-9]{1,3}%$"
+        },
+        "heroMobileImageFit": {
+          "type": "string",
+          "enum": ["cover", "contain"]
+        },
         "heroPrimaryCtaText": {
           "type": "string",
           "maxLength": 60

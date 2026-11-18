@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowRight, Search, X } from 'lucide-react';
 import { PALAZZO_LOGO_PATH } from '../../data/demoData';
+import { scrollToSection } from '../../lib/scroll';
 import type { SiteSettings } from '../../types';
 import { WhatsAppButton } from '../ui/WhatsAppButton';
 
@@ -15,6 +16,7 @@ interface MobileMenuProps {
 export function MobileMenu({ open, onClose, settings, navLinks }: MobileMenuProps) {
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   if (!open) return null;
 
@@ -22,6 +24,25 @@ export function MobileMenu({ open, onClose, settings, navLinks }: MobileMenuProp
     e.preventDefault();
     onClose();
     navigate(query.trim() ? `/motos?q=${encodeURIComponent(query.trim())}` : '/motos');
+  };
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, to: string) => {
+    onClose();
+    if (to === '/' && location.pathname === '/') {
+      e.preventDefault();
+      if (location.hash) navigate('/', { replace: true });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (to.startsWith('/#') && location.pathname === '/') {
+      e.preventDefault();
+      const targetHash = to.slice(1);
+      if (location.hash !== targetHash) {
+        navigate(to);
+      }
+      requestAnimationFrame(() => scrollToSection(targetHash));
+    }
   };
 
   return (
@@ -75,7 +96,7 @@ export function MobileMenu({ open, onClose, settings, navLinks }: MobileMenuProp
             <Link
               key={item.label}
               to={item.to}
-              onClick={onClose}
+              onClick={(e) => handleLinkClick(e, item.to)}
               className="py-4 flex items-center justify-between text-base font-semibold text-[#F3F3F3] hover:text-[#B7F21B] transition-colors"
             >
               <span>{item.label}</span>

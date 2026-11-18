@@ -1,8 +1,9 @@
-import React from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
+import { scrollToSection } from './lib/scroll';
 import { HomePage } from './pages/storefront/HomePage';
 import { CatalogPage } from './pages/storefront/CatalogPage';
 import { CategoryPage } from './pages/storefront/CategoryPage';
@@ -15,6 +16,37 @@ import { AdminCategoriesPage } from './pages/admin/AdminCategoriesPage';
 import { AdminBannersPage } from './pages/admin/AdminBannersPage';
 import { AdminSiteEditorPage } from './pages/admin/AdminSiteEditorPage';
 import { AdminSettingsPage } from './pages/admin/AdminSettingsPage';
+
+function ScrollManager() {
+  const { pathname, hash, key } = useLocation();
+
+  useEffect(() => {
+    if (!hash) {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      return;
+    }
+
+    let attempts = 0;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    const tryScroll = () => {
+      if (scrollToSection(hash) || attempts >= 16) {
+        return;
+      }
+      attempts += 1;
+      timer = setTimeout(tryScroll, 50);
+    };
+
+    const rafId = requestAnimationFrame(tryScroll);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      if (timer) clearTimeout(timer);
+    };
+  }, [pathname, hash, key]);
+
+  return null;
+}
 
 function RequireAdmin({ children }: { children: React.ReactNode }) {
   const { user, isAdmin, authReady } = useAuth();
@@ -40,6 +72,7 @@ export default function App() {
       <AuthProvider>
         <ToastProvider>
           <BrowserRouter>
+            <ScrollManager />
             <Routes>
               {/* Public Storefront Routes */}
               <Route path="/" element={<HomePage />} />

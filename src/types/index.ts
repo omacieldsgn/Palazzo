@@ -99,6 +99,11 @@ export interface SiteSettings {
   heroSubheadline?: string;
   heroImageDesktop?: string;
   heroImageMobile?: string;
+  heroOverlayShadow?: boolean;
+  heroImagePosition?: string;
+  heroImageFit?: CoverFit;
+  heroMobileImagePosition?: string;
+  heroMobileImageFit?: CoverFit;
   heroPrimaryCtaText?: string;
   heroPrimaryCtaUrl?: string;
   heroSecondaryCtaText?: string;

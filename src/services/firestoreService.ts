@@ -614,6 +614,12 @@ export async function saveSiteSettings(settings: SiteSettings): Promise<void> {
     heroSubheadline: settings.heroSubheadline?.trim(),
     heroImageDesktop: settings.heroImageDesktop?.trim(),
     heroImageMobile: settings.heroImageMobile?.trim(),
+    heroOverlayShadow: settings.heroOverlayShadow ?? true,
+    heroImagePosition: settings.heroImagePosition?.trim() || '50% 50%',
+    heroImageFit: settings.heroImageFit || 'cover',
+    heroMobileImagePosition:
+      settings.heroMobileImagePosition?.trim() || settings.heroImagePosition?.trim() || '50% 50%',
+    heroMobileImageFit: settings.heroMobileImageFit || settings.heroImageFit || 'cover',
     heroPrimaryCtaText: settings.heroPrimaryCtaText?.trim(),
     heroPrimaryCtaUrl: settings.heroPrimaryCtaUrl?.trim(),
     heroSecondaryCtaText: settings.heroSecondaryCtaText?.trim(),

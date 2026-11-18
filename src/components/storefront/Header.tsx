@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, MessageCircle, Search, X } from 'lucide-react';
 import { PALAZZO_LOGO_PATH } from '../../data/demoData';
 import { buildWhatsAppUrl } from '../../lib/formatters';
+import { scrollToSection } from '../../lib/scroll';
 import type { SiteSettings } from '../../types';
 import { MobileMenu } from './MobileMenu';
 
@@ -36,6 +37,26 @@ export function Header({ settings }: HeaderProps) {
     navigate(q ? `/motos?q=${encodeURIComponent(q)}` : '/motos');
   };
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, to: string) => {
+    if (to === '/' && location.pathname === '/') {
+      e.preventDefault();
+      if (location.hash) {
+        navigate('/', { replace: true });
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (to.startsWith('/#') && location.pathname === '/') {
+      e.preventDefault();
+      const targetHash = to.slice(1);
+      if (location.hash !== targetHash) {
+        navigate(to);
+      }
+      scrollToSection(targetHash);
+    }
+  };
+
   const whatsappHref = buildWhatsAppUrl(
     settings.whatsappNumber,
     'Olá! Gostaria de conhecer as motos disponíveis na Palazzo Motos.',
@@ -62,6 +83,7 @@ export function Header({ settings }: HeaderProps) {
           {/* Zone 1: Original Palazzo Motos Logo */}
           <Link
             to="/"
+            onClick={(e) => handleNavClick(e, '/')}
             aria-label="Palazzo Motos — Página inicial"
             className="flex items-center shrink-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B7F21B] rounded"
           >
@@ -81,11 +103,14 @@ export function Header({ settings }: HeaderProps) {
               const isActive =
                 item.to === '/'
                   ? location.pathname === '/' && !location.hash
-                  : location.pathname === item.to;
+                  : item.to.startsWith('/#')
+                    ? location.pathname === '/' && location.hash === item.to.slice(1)
+                    : location.pathname === item.to;
               return (
                 <Link
                   key={item.label}
                   to={item.to}
+                  onClick={(e) => handleNavClick(e, item.to)}
                   className={`relative py-1 text-sm font-medium whitespace-nowrap shrink-0 transition-colors ${
                     isActive
                       ? 'text-[#B7F21B]'

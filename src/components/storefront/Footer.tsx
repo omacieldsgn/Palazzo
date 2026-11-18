@@ -1,6 +1,8 @@
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Clock, Instagram, Mail, MapPin, Phone } from 'lucide-react';
 import { PALAZZO_LOGO_PATH } from '../../data/demoData';
+import { scrollToSection } from '../../lib/scroll';
 import type { Category, SiteSettings } from '../../types';
 
 interface FooterProps {
@@ -10,14 +12,39 @@ interface FooterProps {
 
 export function Footer({ settings, categories }: FooterProps) {
   const currentYear = new Date().getFullYear();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, to: string) => {
+    if (to === '/' && location.pathname === '/') {
+      e.preventDefault();
+      if (location.hash) navigate('/', { replace: true });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (to.startsWith('/#') && location.pathname === '/') {
+      e.preventDefault();
+      const targetHash = to.slice(1);
+      if (location.hash !== targetHash) navigate(to);
+      scrollToSection(targetHash);
+    }
+  };
 
   return (
-    <footer className="bg-[#080909] border-t border-[#242727] text-[#858989]">
+    <footer
+      id="contato-rodape"
+      className="bg-[#080909] border-t border-[#242727] text-[#858989]"
+    >
       <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
           {/* Brand Column */}
           <div className="lg:col-span-4 space-y-4">
-            <Link to="/" className="inline-block">
+            <Link
+              to="/"
+              onClick={(e) => handleAnchorClick(e, '/')}
+              className="inline-block"
+            >
               <img
                 src={settings.logoUrl || PALAZZO_LOGO_PATH}
                 alt={settings.companyName || 'Palazzo Motos'}
@@ -37,7 +64,11 @@ export function Footer({ settings, categories }: FooterProps) {
             </h3>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link to="/" className="hover:text-[#B7F21B] transition-colors">
+                <Link
+                  to="/"
+                  onClick={(e) => handleAnchorClick(e, '/')}
+                  className="hover:text-[#B7F21B] transition-colors"
+                >
                   Início
                 </Link>
               </li>
@@ -47,7 +78,11 @@ export function Footer({ settings, categories }: FooterProps) {
                 </Link>
               </li>
               <li>
-                <Link to="/#sobre" className="hover:text-[#B7F21B] transition-colors">
+                <Link
+                  to="/#sobre"
+                  onClick={(e) => handleAnchorClick(e, '/#sobre')}
+                  className="hover:text-[#B7F21B] transition-colors"
+                >
                   Sobre a Palazzo
                 </Link>
               </li>

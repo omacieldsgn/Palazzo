@@ -102,6 +102,21 @@ export const siteSettingsSchema = z.object({
   heroSubheadline: z.string().trim().max(300).optional(),
   heroImageDesktop: z.string().trim().max(600).optional(),
   heroImageMobile: z.string().trim().max(600).optional(),
+  heroOverlayShadow: z.boolean().optional(),
+  heroImagePosition: z
+    .string()
+    .trim()
+    .max(32)
+    .regex(/^\d{1,3}%\s+\d{1,3}%$/, 'Posição do banner inválida')
+    .optional(),
+  heroImageFit: z.enum(['cover', 'contain']).optional(),
+  heroMobileImagePosition: z
+    .string()
+    .trim()
+    .max(32)
+    .regex(/^\d{1,3}%\s+\d{1,3}%$/, 'Posição mobile do banner inválida')
+    .optional(),
+  heroMobileImageFit: z.enum(['cover', 'contain']).optional(),
   heroPrimaryCtaText: z.string().trim().max(60).optional(),
   heroPrimaryCtaUrl: z.string().trim().max(300).optional(),
   heroSecondaryCtaText: z.string().trim().max(60).optional(),

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Header } from '../../components/storefront/Header';
 import { HeroSection } from '../../components/storefront/HeroSection';
@@ -16,12 +16,14 @@ import {
   isOpportunityMotorcycle,
   sortMotorcycles,
 } from '../../lib/catalog';
+import { scrollToSection } from '../../lib/scroll';
 import { useStorefrontData } from '../../hooks/useStorefrontData';
 import type { SortOption, StorefrontSectionKey } from '../../types';
 
 export function HomePage() {
   const { motorcycles, categories, banners, settings, loading, error, retry } =
     useStorefrontData();
+  const location = useLocation();
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -30,6 +32,13 @@ export function HomePage() {
   useEffect(() => {
     document.title = settings.seoTitle || 'Palazzo Motos — Digital Showroom';
   }, [settings.seoTitle]);
+
+  useEffect(() => {
+    if (!loading && location.hash) {
+      const raf = requestAnimationFrame(() => scrollToSection(location.hash));
+      return () => cancelAnimationFrame(raf);
+    }
+  }, [loading, location.hash]);
 
   const countsByCategory = useMemo(() => {
     const counts: Record<string, number> = {};

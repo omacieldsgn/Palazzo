@@ -151,7 +151,9 @@ service cloud.firestore {
         data.keys().hasOnly([
           'companyName', 'logoUrl', 'whatsappNumber', 'phone', 'instagram', 'email',
           'address', 'openingHours', 'heroHeadline', 'heroSubheadline',
-          'heroImageDesktop', 'heroImageMobile', 'heroPrimaryCtaText', 'heroPrimaryCtaUrl',
+          'heroImageDesktop', 'heroImageMobile', 'heroOverlayShadow',
+          'heroImagePosition', 'heroImageFit', 'heroMobileImagePosition', 'heroMobileImageFit',
+          'heroPrimaryCtaText', 'heroPrimaryCtaUrl',
           'heroSecondaryCtaText', 'heroSecondaryCtaUrl', 'aboutTitle', 'aboutText',
           'finalCtaTitle', 'finalCtaSubtitle', 'finalCtaButtonText',
           'seoTitle', 'seoDescription', 'activeSections', 'sectionsOrder', 'updatedAt'
@@ -168,6 +170,11 @@ service cloud.firestore {
         (!('heroSubheadline' in data) || (data.heroSubheadline is string && data.heroSubheadline.size() <= 300)) &&
         (!('heroImageDesktop' in data) || (data.heroImageDesktop is string && data.heroImageDesktop.size() <= 600)) &&
         (!('heroImageMobile' in data) || (data.heroImageMobile is string && data.heroImageMobile.size() <= 600)) &&
+        (!('heroOverlayShadow' in data) || data.heroOverlayShadow is bool) &&
+        (!('heroImagePosition' in data) || (data.heroImagePosition is string && data.heroImagePosition.size() <= 32 && data.heroImagePosition.matches('^[0-9]{1,3}% [0-9]{1,3}%$'))) &&
+        (!('heroImageFit' in data) || data.heroImageFit in ['cover', 'contain']) &&
+        (!('heroMobileImagePosition' in data) || (data.heroMobileImagePosition is string && data.heroMobileImagePosition.size() <= 32 && data.heroMobileImagePosition.matches('^[0-9]{1,3}% [0-9]{1,3}%$'))) &&
+        (!('heroMobileImageFit' in data) || data.heroMobileImageFit in ['cover', 'contain']) &&
         (!('heroPrimaryCtaText' in data) || (data.heroPrimaryCtaText is string && data.heroPrimaryCtaText.size() <= 60)) &&
         (!('heroPrimaryCtaUrl' in data) || (data.heroPrimaryCtaUrl is string && data.heroPrimaryCtaUrl.size() <= 300)) &&
         (!('heroSecondaryCtaText' in data) || (data.heroSecondaryCtaText is string && data.heroSecondaryCtaText.size() <= 60)) &&
@@ -242,7 +249,9 @@ service cloud.firestore {
         incoming().diff(existing()).affectedKeys().hasOnly([
           'companyName', 'logoUrl', 'whatsappNumber', 'phone', 'instagram', 'email',
           'address', 'openingHours', 'heroHeadline', 'heroSubheadline',
-          'heroImageDesktop', 'heroImageMobile', 'heroPrimaryCtaText', 'heroPrimaryCtaUrl',
+          'heroImageDesktop', 'heroImageMobile', 'heroOverlayShadow',
+          'heroImagePosition', 'heroImageFit', 'heroMobileImagePosition', 'heroMobileImageFit',
+          'heroPrimaryCtaText', 'heroPrimaryCtaUrl',
           'heroSecondaryCtaText', 'heroSecondaryCtaUrl', 'aboutTitle', 'aboutText',
           'finalCtaTitle', 'finalCtaSubtitle', 'finalCtaButtonText',
           'seoTitle', 'seoDescription', 'activeSections', 'sectionsOrder', 'updatedAt'
