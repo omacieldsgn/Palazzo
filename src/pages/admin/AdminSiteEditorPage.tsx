@@ -1,16 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowDown, ArrowUp, Crosshair, Maximize2, Minimize2, Save, Upload } from 'lucide-react';
+import {
+  ArrowDown,
+  ArrowUp,
+  Crosshair,
+  Maximize2,
+  Minimize2,
+  Moon,
+  Save,
+  Sun,
+  Upload,
+} from 'lucide-react';
 import { AdminLayout } from '../../components/admin/AdminLayout';
 import { ResilientImage } from '../../components/ui/ResilientImage';
 import { useToast } from '../../context/ToastContext';
 import { DEFAULT_SITE_SETTINGS } from '../../data/demoData';
+import {
+  buildHeroShadowGradient,
+  getContrastInk,
+  isLightColor,
+  parseHeadlineSegments,
+} from '../../lib/heroStyles';
 import { siteSettingsSchema } from '../../lib/validations';
 import {
   saveSiteSettings,
   subscribeSiteSettings,
   uploadOptimizedImage,
 } from '../../services/firestoreService';
-import type { CoverFit, SiteSettings, StorefrontSectionKey } from '../../types';
+import type {
+  CoverFit,
+  HeroShadowDirection,
+  SiteSettings,
+  StorefrontSectionKey,
+  ThemeMode,
+} from '../../types';
 
 const SECTION_LABELS: Record<StorefrontSectionKey, string> = {
   hero: 'Hero Principal',
@@ -21,6 +43,17 @@ const SECTION_LABELS: Record<StorefrontSectionKey, string> = {
   about: 'Sobre a Palazzo Motos',
   final_cta: 'CTA Final (WhatsApp)',
 };
+
+const SHADOW_DIRECTION_OPTIONS: Array<{ value: HeroShadowDirection; label: string }> = [
+  { value: 'left', label: 'Esquerda' },
+  { value: 'right', label: 'Direita' },
+  { value: 'top', label: 'Cima' },
+  { value: 'bottom', label: 'Baixo' },
+  { value: 'all', label: 'Vinheta' },
+];
+
+const SHADOW_COLOR_PRESETS = ['#080909', '#000000', '#141515', '#0F172A', '#FFFFFF'];
+const HIGHLIGHT_BG_PRESETS = ['#B7F21B', '#FFFFFF', '#101212', '#F3B43C', '#EF4444'];
 
 function parsePositionCoords(position?: string): [number, number] {
   const match = (position || '50% 50%').match(/^(\d{1,3})%\s+(\d{1,3})%$/);
@@ -90,7 +123,18 @@ export function AdminSiteEditorPage() {
     try {
       await saveSiteSettings({
         ...settings,
+        defaultTheme: settings.defaultTheme === 'light' ? 'light' : 'dark',
         heroOverlayShadow: settings.heroOverlayShadow !== false,
+        heroShadowColor: settings.heroShadowColor || '#080909',
+        heroShadowOpacity:
+          typeof settings.heroShadowOpacity === 'number' ? settings.heroShadowOpacity : 85,
+        heroShadowDirection: settings.heroShadowDirection || 'left',
+        heroShadowReach:
+          typeof settings.heroShadowReach === 'number' ? settings.heroShadowReach : 70,
+        heroHighlightBold: settings.heroHighlightBold !== false,
+        heroHighlightItalic: settings.heroHighlightItalic === true,
+        heroHighlightBgEnabled: settings.heroHighlightBgEnabled === true,
+        heroHighlightBgColor: settings.heroHighlightBgColor || '#B7F21B',
         heroImageFit: settings.heroImageFit || 'cover',
         heroImagePosition: settings.heroImagePosition || '50% 50%',
         heroMobileImageFit: settings.heroMobileImageFit || settings.heroImageFit || 'cover',
@@ -148,13 +192,110 @@ export function AdminSiteEditorPage() {
   };
 
   const showShadowPreview = settings.heroOverlayShadow !== false;
+  const shadowColor = settings.heroShadowColor || '#080909';
+  const shadowOpacity =
+    typeof settings.heroShadowOpacity === 'number' ? settings.heroShadowOpacity : 85;
+  const shadowDirection: HeroShadowDirection = settings.heroShadowDirection || 'left';
+  const shadowReach =
+    typeof settings.heroShadowReach === 'number' ? settings.heroShadowReach : 70;
+
+  const shadowGradientPreview = buildHeroShadowGradient({
+    enabled: showShadowPreview,
+    color: shadowColor,
+    opacity: shadowOpacity,
+    direction: shadowDirection,
+    reach: shadowReach,
+  });
+
+  const highlightBold = settings.heroHighlightBold !== false;
+  const highlightItalic = settings.heroHighlightItalic === true;
+  const highlightBgEnabled = settings.heroHighlightBgEnabled === true;
+  const highlightBgColor = settings.heroHighlightBgColor || '#B7F21B';
+  const highlightInk = getContrastInk(highlightBgColor);
+  const headlineSegments = parseHeadlineSegments(settings.heroHeadline);
+  const hasEmphasized = headlineSegments.some((s) => s.emphasized);
+  const previewDarkInk = showShadowPreview && Boolean(shadowGradientPreview) && isLightColor(shadowColor);
+  const defaultTheme: ThemeMode = settings.defaultTheme === 'light' ? 'light' : 'dark';
+
+  const renderStyledHeadline = () =>
+    headlineSegments.map((seg, idx) => {
+      if (!seg.emphasized) return <span key={idx}>{seg.text}</span>;
+      return (
+        <span
+          key={idx}
+          className={`${highlightBold ? 'font-extrabold' : 'font-medium'} ${
+            highlightItalic ? 'italic' : ''
+          } ${
+            highlightBgEnabled
+              ? 'inline-block px-2 py-0.5 rounded-md box-decoration-clone align-baseline'
+              : ''
+          }`}
+          style={
+            highlightBgEnabled
+              ? { backgroundColor: highlightBgColor, color: highlightInk }
+              : undefined
+          }
+        >
+          {seg.text}
+        </span>
+      );
+    });
 
   return (
     <AdminLayout
       title="Personalizar Vitrine"
-      subtitle="Edite textos, imagens do Hero e a ordem das seções mantendo o Design System Palazzo"
+      subtitle="Edite tema, textos, sombra e enquadramento do Hero mantendo o Design System Palazzo"
     >
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Default Storefront Theme */}
+        <section className="bg-[#141515] border border-[#242727] rounded-xl p-6 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 className="font-display text-sm font-bold uppercase tracking-wider text-[#B7F21B]">
+                Aparência da Vitrine Pública (Modo Claro / Escuro)
+              </h2>
+              <p className="text-xs text-[#858989] mt-1">
+                Defina qual tema os visitantes veem por padrão ao acessar o site. O visitante também pode alternar manualmente pelo botão no cabeçalho.
+              </p>
+            </div>
+
+            <div
+              role="radiogroup"
+              aria-label="Tema padrão da vitrine"
+              className="inline-flex rounded-lg border border-[#303434] bg-[#0D0F0F] p-1 shrink-0"
+            >
+              <button
+                type="button"
+                role="radio"
+                aria-checked={defaultTheme === 'dark'}
+                onClick={() => setSettings((prev) => ({ ...prev, defaultTheme: 'dark' }))}
+                className={`px-3.5 py-2 rounded-md text-xs font-semibold inline-flex items-center gap-2 transition-colors ${
+                  defaultTheme === 'dark'
+                    ? 'bg-[#B7F21B] text-[#101010]'
+                    : 'text-[#858989] hover:text-[#F3F3F3]'
+                }`}
+              >
+                <Moon className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Modo Escuro</span>
+              </button>
+              <button
+                type="button"
+                role="radio"
+                aria-checked={defaultTheme === 'light'}
+                onClick={() => setSettings((prev) => ({ ...prev, defaultTheme: 'light' }))}
+                className={`px-3.5 py-2 rounded-md text-xs font-semibold inline-flex items-center gap-2 transition-colors ${
+                  defaultTheme === 'light'
+                    ? 'bg-[#B7F21B] text-[#101010]'
+                    : 'text-[#858989] hover:text-[#F3F3F3]'
+                }`}
+              >
+                <Sun className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Modo Claro</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
         {/* Hero Editor */}
         <section className="bg-[#141515] border border-[#242727] rounded-xl p-6 space-y-5">
           <h2 className="font-display text-sm font-bold uppercase tracking-wider text-[#B7F21B]">
@@ -163,28 +304,174 @@ export function AdminSiteEditorPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-[#858989] mb-1.5">
+              <label
+                htmlFor="hero-headline-input"
+                className="block text-xs font-medium text-[#858989] mb-1.5"
+              >
                 Headline Principal *
               </label>
               <input
+                id="hero-headline-input"
                 type="text"
                 required
                 value={settings.heroHeadline}
                 onChange={(e) => setSettings({ ...settings, heroHeadline: e.target.value })}
                 className="w-full h-11 px-3 rounded-lg bg-[#0D0F0F] border border-[#303434] text-sm text-[#F3F3F3]"
               />
+              <p className="text-[11px] text-[#858989] mt-1.5 leading-relaxed">
+                Respeita exatamente maiúsculas e minúsculas digitadas. Envolva palavras em{' '}
+                <code className="px-1.5 py-0.5 rounded bg-[#0D0F0F] border border-[#303434] text-[#B7F21B] font-mono-tabular">
+                  *EXEMPLO*
+                </code>{' '}
+                para aplicar os estilos de ênfase abaixo.
+              </p>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[#858989] mb-1.5">
+              <label
+                htmlFor="hero-subheadline-input"
+                className="block text-xs font-medium text-[#858989] mb-1.5"
+              >
                 Subheadline
               </label>
               <input
+                id="hero-subheadline-input"
                 type="text"
                 value={settings.heroSubheadline || ''}
                 onChange={(e) => setSettings({ ...settings, heroSubheadline: e.target.value })}
                 className="w-full h-11 px-3 rounded-lg bg-[#0D0F0F] border border-[#303434] text-sm text-[#F3F3F3]"
               />
+            </div>
+          </div>
+
+          {/* Headline Emphasis Style Controls for *EXEMPLO* */}
+          <div className="bg-[#0D0F0F] border border-[#242727] rounded-xl p-4 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[#F3F3F3]">
+                  Ênfase para palavras entre *asteriscos*
+                </h3>
+                <p className="text-[11px] text-[#858989] mt-0.5">
+                  Personalize como cada trecho marcado como *EXEMPLO* aparece na capa.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <label className="flex items-center gap-2.5 p-3 rounded-lg border border-[#242727] bg-[#141515] cursor-pointer hover:border-[#303434]">
+                <input
+                  type="checkbox"
+                  checked={highlightBold}
+                  onChange={(e) =>
+                    setSettings((prev) => ({ ...prev, heroHighlightBold: e.target.checked }))
+                  }
+                  className="w-4 h-4 accent-[#B7F21B] shrink-0"
+                />
+                <span className="text-xs font-semibold text-[#F3F3F3]">Negrito</span>
+              </label>
+
+              <label className="flex items-center gap-2.5 p-3 rounded-lg border border-[#242727] bg-[#141515] cursor-pointer hover:border-[#303434]">
+                <input
+                  type="checkbox"
+                  checked={highlightItalic}
+                  onChange={(e) =>
+                    setSettings((prev) => ({ ...prev, heroHighlightItalic: e.target.checked }))
+                  }
+                  className="w-4 h-4 accent-[#B7F21B] shrink-0"
+                />
+                <span className="text-xs font-semibold italic text-[#F3F3F3]">Itálico</span>
+              </label>
+
+              <label className="flex items-center gap-2.5 p-3 rounded-lg border border-[#242727] bg-[#141515] cursor-pointer hover:border-[#303434]">
+                <input
+                  type="checkbox"
+                  checked={highlightBgEnabled}
+                  onChange={(e) =>
+                    setSettings((prev) => ({
+                      ...prev,
+                      heroHighlightBgEnabled: e.target.checked,
+                    }))
+                  }
+                  className="w-4 h-4 accent-[#B7F21B] shrink-0"
+                />
+                <span className="text-xs font-semibold text-[#F3F3F3]">
+                  Plano de fundo na palavra
+                </span>
+              </label>
+            </div>
+
+            {highlightBgEnabled && (
+              <div className="pt-3 border-t border-[#242727] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <label
+                    htmlFor="highlight-bg-picker"
+                    className="text-xs font-medium text-[#858989]"
+                  >
+                    Cor do plano de fundo:
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      id="highlight-bg-picker"
+                      type="color"
+                      value={highlightBgColor}
+                      onChange={(e) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          heroHighlightBgColor: e.target.value.toUpperCase(),
+                        }))
+                      }
+                      className="w-9 h-9 rounded-lg border border-[#303434] bg-[#141515] cursor-pointer p-0.5"
+                    />
+                    <input
+                      type="text"
+                      aria-label="Código hexadecimal da cor do plano de fundo"
+                      value={highlightBgColor}
+                      onChange={(e) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          heroHighlightBgColor: e.target.value,
+                        }))
+                      }
+                      className="w-24 h-9 px-2.5 rounded-lg bg-[#141515] border border-[#303434] text-xs font-mono-tabular text-[#F3F3F3]"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[11px] text-[#858989] mr-1">Sugestões:</span>
+                  {HIGHLIGHT_BG_PRESETS.map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      onClick={() =>
+                        setSettings((prev) => ({ ...prev, heroHighlightBgColor: preset }))
+                      }
+                      aria-label={`Aplicar cor ${preset} ao fundo da palavra`}
+                      className={`w-6 h-6 rounded-md border transition-transform hover:scale-110 ${
+                        highlightBgColor.toUpperCase() === preset
+                          ? 'border-[#B7F21B] ring-1 ring-[#B7F21B]'
+                          : 'border-[#303434]'
+                      }`}
+                      style={{ backgroundColor: preset }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="pt-3 border-t border-[#242727]">
+              <span className="block text-[11px] uppercase tracking-wider text-[#858989] mb-1.5">
+                Prévia da Headline
+              </span>
+              <div className="p-3 rounded-lg bg-[#080909] border border-[#242727]">
+                <p
+                  className={`font-display text-lg sm:text-xl text-[#F3F3F3] leading-snug ${
+                    hasEmphasized ? 'font-medium' : 'font-extrabold'
+                  }`}
+                >
+                  {renderStyledHeadline()}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -227,8 +514,8 @@ export function AdminSiteEditorPage() {
             </div>
           </div>
 
-          {/* Banner Shadow Toggle */}
-          <div className="bg-[#0D0F0F] border border-[#242727] rounded-xl p-4">
+          {/* Complete Banner Shadow Controls */}
+          <div className="bg-[#0D0F0F] border border-[#242727] rounded-xl p-4 space-y-4">
             <label
               htmlFor="hero-overlay-shadow"
               className="flex items-start gap-3 cursor-pointer"
@@ -247,10 +534,143 @@ export function AdminSiteEditorPage() {
                   Ativar sombra sobre o banner
                 </span>
                 <span className="block text-xs text-[#858989] mt-0.5">
-                  Aplica um degradê escuro sobre a imagem para destacar os títulos. Desmarque para exibir a imagem limpa sem sombra.
+                  Controle a direção, cor, opacidade e o alcance do degradê sobre a capa. Desmarque para exibir a imagem totalmente limpa.
                 </span>
               </div>
             </label>
+
+            {showShadowPreview && (
+              <div className="pt-4 border-t border-[#242727] space-y-4">
+                {/* Direction Selector */}
+                <div>
+                  <span className="block text-xs font-medium text-[#858989] mb-2">
+                    Origem / Direção da Sombra
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {SHADOW_DIRECTION_OPTIONS.map((opt) => {
+                      const active = shadowDirection === opt.value;
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() =>
+                            setSettings((prev) => ({ ...prev, heroShadowDirection: opt.value }))
+                          }
+                          className={`px-3.5 py-2 rounded-lg border text-xs font-semibold transition-colors ${
+                            active
+                              ? 'bg-[#B7F21B] border-[#B7F21B] text-[#101010]'
+                              : 'bg-[#141515] border-[#303434] text-[#F3F3F3] hover:border-[#B7F21B]/60'
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Color Picker + Opacity + Center Reach */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+                  <div>
+                    <label
+                      htmlFor="hero-shadow-color-picker"
+                      className="block text-xs font-medium text-[#858989] mb-2"
+                    >
+                      Cor da Sombra
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        id="hero-shadow-color-picker"
+                        type="color"
+                        value={shadowColor}
+                        onChange={(e) =>
+                          setSettings((prev) => ({
+                            ...prev,
+                            heroShadowColor: e.target.value.toUpperCase(),
+                          }))
+                        }
+                        className="w-10 h-10 rounded-lg border border-[#303434] bg-[#141515] cursor-pointer p-0.5 shrink-0"
+                      />
+                      <input
+                        type="text"
+                        aria-label="Código hexadecimal da cor da sombra"
+                        value={shadowColor}
+                        onChange={(e) =>
+                          setSettings((prev) => ({ ...prev, heroShadowColor: e.target.value }))
+                        }
+                        className="w-24 h-10 px-2.5 rounded-lg bg-[#141515] border border-[#303434] text-xs font-mono-tabular text-[#F3F3F3]"
+                      />
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-2">
+                      {SHADOW_COLOR_PRESETS.map((preset) => (
+                        <button
+                          key={preset}
+                          type="button"
+                          onClick={() =>
+                            setSettings((prev) => ({ ...prev, heroShadowColor: preset }))
+                          }
+                          aria-label={`Aplicar cor ${preset} à sombra`}
+                          className={`w-6 h-6 rounded-md border transition-transform hover:scale-110 ${
+                            shadowColor.toUpperCase() === preset
+                              ? 'border-[#B7F21B] ring-1 ring-[#B7F21B]'
+                              : 'border-[#303434]'
+                          }`}
+                          style={{ backgroundColor: preset }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between text-xs text-[#858989] mb-2">
+                      <label htmlFor="hero-shadow-opacity">Opacidade da Sombra</label>
+                      <span className="font-mono-tabular text-[#F3F3F3]">{shadowOpacity}%</span>
+                    </div>
+                    <input
+                      id="hero-shadow-opacity"
+                      type="range"
+                      min={0}
+                      max={100}
+                      value={shadowOpacity}
+                      onChange={(e) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          heroShadowOpacity: Number(e.target.value),
+                        }))
+                      }
+                      className="w-full accent-[#B7F21B]"
+                    />
+                    <p className="text-[11px] text-[#5D6262] mt-1">
+                      0% transparente · 100% sólido na origem
+                    </p>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between text-xs text-[#858989] mb-2">
+                      <label htmlFor="hero-shadow-reach">Avanço para o Centro</label>
+                      <span className="font-mono-tabular text-[#F3F3F3]">{shadowReach}%</span>
+                    </div>
+                    <input
+                      id="hero-shadow-reach"
+                      type="range"
+                      min={10}
+                      max={100}
+                      value={shadowReach}
+                      onChange={(e) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          heroShadowReach: Number(e.target.value),
+                        }))
+                      }
+                      className="w-full accent-[#B7F21B]"
+                    />
+                    <p className="text-[11px] text-[#5D6262] mt-1">
+                      Define até onde a sombra avança sobre a capa
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Complete Banner Framing & Centralization */}
@@ -328,7 +748,7 @@ export function AdminSiteEditorPage() {
 
             {previewImg ? (
               <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
-                {/* Live Click-to-Focus Preview */}
+                {/* Live Click-to-Focus + Shadow + Headline Preview */}
                 <div className="md:col-span-6">
                   <div
                     role="button"
@@ -359,24 +779,35 @@ export function AdminSiteEditorPage() {
                     <ResilientImage
                       src={previewImg}
                       alt={`Prévia do banner Hero (${framingTarget})`}
-                      className={`w-full h-full ${
+                      className={`w-full h-full opacity-100 ${
                         activeFit === 'contain' ? 'object-contain p-2' : 'object-cover'
-                      } ${showShadowPreview ? 'opacity-70' : 'opacity-100'}`}
+                      }`}
                       style={{ objectPosition: `${posX}% ${posY}%` }}
                     />
 
-                    {showShadowPreview && (
-                      <>
-                        <div
-                          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#080909] via-[#080909]/85 to-[#080909]/35"
-                          aria-hidden="true"
-                        />
-                        <div
-                          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#080909] via-transparent to-[#080909]/40"
-                          aria-hidden="true"
-                        />
-                      </>
+                    {shadowGradientPreview && (
+                      <div
+                        className="pointer-events-none absolute inset-0"
+                        style={{ background: shadowGradientPreview }}
+                        aria-hidden="true"
+                      />
                     )}
+
+                    {/* Mini Live Headline Overlay */}
+                    <div
+                      className="pointer-events-none absolute inset-0 p-4 flex flex-col justify-center"
+                      aria-hidden="true"
+                    >
+                      <p
+                        className={`font-display leading-tight max-w-[85%] ${
+                          framingTarget === 'desktop' ? 'text-sm sm:text-base' : 'text-xs'
+                        } ${hasEmphasized ? 'font-medium' : 'font-extrabold'} ${
+                          previewDarkInk ? 'text-[#101212]' : 'text-[#F3F3F3]'
+                        }`}
+                      >
+                        {renderStyledHeadline()}
+                      </p>
+                    </div>
 
                     {/* Center Alignment Guides */}
                     <div

@@ -98,11 +98,28 @@ export const siteSettingsSchema = z.object({
   email: z.string().trim().max(120).optional(),
   address: z.string().trim().max(240).optional(),
   openingHours: z.string().trim().max(200).optional(),
+  defaultTheme: z.enum(['dark', 'light']).optional(),
   heroHeadline: z.string().trim().min(2, 'Informe a headline principal').max(160),
   heroSubheadline: z.string().trim().max(300).optional(),
   heroImageDesktop: z.string().trim().max(600).optional(),
   heroImageMobile: z.string().trim().max(600).optional(),
   heroOverlayShadow: z.boolean().optional(),
+  heroShadowColor: z
+    .string()
+    .trim()
+    .regex(/^#[0-9a-fA-F]{6}$/, 'Cor da sombra inválida')
+    .optional(),
+  heroShadowOpacity: z.number().min(0).max(100).optional(),
+  heroShadowDirection: z.enum(['left', 'right', 'top', 'bottom', 'all']).optional(),
+  heroShadowReach: z.number().min(10).max(100).optional(),
+  heroHighlightBold: z.boolean().optional(),
+  heroHighlightItalic: z.boolean().optional(),
+  heroHighlightBgEnabled: z.boolean().optional(),
+  heroHighlightBgColor: z
+    .string()
+    .trim()
+    .regex(/^#[0-9a-fA-F]{6}$/, 'Cor de fundo do destaque inválida')
+    .optional(),
   heroImagePosition: z
     .string()
     .trim()

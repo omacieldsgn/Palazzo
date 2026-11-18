@@ -61,7 +61,7 @@ export function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080909] text-[#F3F3F3] palazzo-grid-bg flex flex-col justify-center p-4 sm:p-6">
+    <div className="dark min-h-screen bg-[#080909] text-[#F3F3F3] palazzo-grid-bg flex flex-col justify-center p-4 sm:p-6">
       <div className="w-full max-w-md mx-auto">
         <div className="mb-6">
           <Link

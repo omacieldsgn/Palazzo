@@ -23,9 +23,19 @@
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Montserrat:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Montserrat:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('palazzo-theme');
+          var isLight = saved === 'light';
+          document.documentElement.classList.toggle('dark', !isLight);
+          document.documentElement.style.colorScheme = isLight ? 'light' : 'dark';
+        } catch (e) {}
+      })();
+    </script>
   </head>
-  <body class="bg-[#080909] text-[#F3F3F3] antialiased selection:bg-[#B7F21B] selection:text-[#101010]">
+  <body class="bg-canvas text-ink antialiased selection:bg-[#B7F21B] selection:text-[#101010]">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -319,6 +319,10 @@
           "type": "string",
           "maxLength": 200
         },
+        "defaultTheme": {
+          "type": "string",
+          "enum": ["dark", "light"]
+        },
         "heroHeadline": {
           "type": "string",
           "maxLength": 160
@@ -337,6 +341,35 @@
         },
         "heroOverlayShadow": {
           "type": "boolean"
+        },
+        "heroShadowColor": {
+          "type": "string",
+          "maxLength": 16,
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "heroShadowOpacity": {
+          "type": "number"
+        },
+        "heroShadowDirection": {
+          "type": "string",
+          "enum": ["left", "right", "top", "bottom", "all"]
+        },
+        "heroShadowReach": {
+          "type": "number"
+        },
+        "heroHighlightBold": {
+          "type": "boolean"
+        },
+        "heroHighlightItalic": {
+          "type": "boolean"
+        },
+        "heroHighlightBgEnabled": {
+          "type": "boolean"
+        },
+        "heroHighlightBgColor": {
+          "type": "string",
+          "maxLength": 16,
+          "pattern": "^#[0-9a-fA-F]{6}$"
         },
         "heroImagePosition": {
           "type": "string",

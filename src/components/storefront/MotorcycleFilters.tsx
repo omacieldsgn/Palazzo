@@ -31,12 +31,15 @@ export function MotorcycleFilters({
     onChange({ ...filters, ...patch });
   };
 
+  const selectClass =
+    'w-full h-11 px-3 rounded-lg bg-canvas-alt border border-line text-sm text-ink focus:outline-none focus:border-[#B7F21B]';
+
   const fieldsContent = (
     <div className="space-y-5">
       <div>
         <label
           htmlFor="filter-category"
-          className="block text-xs font-medium uppercase tracking-wider text-[#858989] mb-2"
+          className="block text-xs font-medium uppercase tracking-wider text-ink-secondary mb-2"
         >
           Categoria
         </label>
@@ -44,7 +47,7 @@ export function MotorcycleFilters({
           id="filter-category"
           value={filters.categoryId || 'all'}
           onChange={(e) => update({ categoryId: e.target.value })}
-          className="w-full h-11 px-3 rounded-lg bg-[#0D0F0F] border border-[#303434] text-sm text-[#F3F3F3] focus:outline-none focus:border-[#B7F21B]"
+          className={selectClass}
         >
           <option value="all">Todas as categorias</option>
           {categories.map((cat) => (
@@ -58,7 +61,7 @@ export function MotorcycleFilters({
       <div>
         <label
           htmlFor="filter-brand"
-          className="block text-xs font-medium uppercase tracking-wider text-[#858989] mb-2"
+          className="block text-xs font-medium uppercase tracking-wider text-ink-secondary mb-2"
         >
           Marca
         </label>
@@ -66,7 +69,7 @@ export function MotorcycleFilters({
           id="filter-brand"
           value={filters.brand || 'all'}
           onChange={(e) => update({ brand: e.target.value })}
-          className="w-full h-11 px-3 rounded-lg bg-[#0D0F0F] border border-[#303434] text-sm text-[#F3F3F3] focus:outline-none focus:border-[#B7F21B]"
+          className={selectClass}
         >
           <option value="all">Todas as marcas</option>
           {brands.map((brand) => (
@@ -81,7 +84,7 @@ export function MotorcycleFilters({
         <div>
           <label
             htmlFor="filter-year"
-            className="block text-xs font-medium uppercase tracking-wider text-[#858989] mb-2"
+            className="block text-xs font-medium uppercase tracking-wider text-ink-secondary mb-2"
           >
             Ano mín.
           </label>
@@ -91,7 +94,7 @@ export function MotorcycleFilters({
             onChange={(e) =>
               update({ yearMin: e.target.value ? Number(e.target.value) : null })
             }
-            className="w-full h-11 px-3 rounded-lg bg-[#0D0F0F] border border-[#303434] text-sm text-[#F3F3F3] focus:outline-none focus:border-[#B7F21B]"
+            className={selectClass}
           >
             <option value="">Qualquer</option>
             {years.map((y) => (
@@ -105,7 +108,7 @@ export function MotorcycleFilters({
         <div>
           <label
             htmlFor="filter-condition"
-            className="block text-xs font-medium uppercase tracking-wider text-[#858989] mb-2"
+            className="block text-xs font-medium uppercase tracking-wider text-ink-secondary mb-2"
           >
             Condição
           </label>
@@ -115,7 +118,7 @@ export function MotorcycleFilters({
             onChange={(e) =>
               update({ condition: e.target.value as CatalogFilters['condition'] })
             }
-            className="w-full h-11 px-3 rounded-lg bg-[#0D0F0F] border border-[#303434] text-sm text-[#F3F3F3] focus:outline-none focus:border-[#B7F21B]"
+            className={selectClass}
           >
             <option value="all">Todas</option>
             <option value="new">0 KM</option>
@@ -127,7 +130,7 @@ export function MotorcycleFilters({
       <div>
         <label
           htmlFor="filter-cc"
-          className="block text-xs font-medium uppercase tracking-wider text-[#858989] mb-2"
+          className="block text-xs font-medium uppercase tracking-wider text-ink-secondary mb-2"
         >
           Cilindrada mínima
         </label>
@@ -137,7 +140,7 @@ export function MotorcycleFilters({
           onChange={(e) =>
             update({ ccMin: e.target.value ? Number(e.target.value) : null })
           }
-          className="w-full h-11 px-3 rounded-lg bg-[#0D0F0F] border border-[#303434] text-sm text-[#F3F3F3] focus:outline-none focus:border-[#B7F21B]"
+          className={selectClass}
         >
           <option value="">Todas as cilindradas</option>
           <option value="150">A partir de 150 cc</option>
@@ -151,11 +154,11 @@ export function MotorcycleFilters({
       <div>
         <label
           htmlFor="filter-price"
-          className="block text-xs font-medium uppercase tracking-wider text-[#858989] mb-2"
+          className="block text-xs font-medium uppercase tracking-wider text-ink-secondary mb-2"
         >
           Preço máximo{' '}
           {filters.priceMax ? (
-            <span className="text-[#B7F21B] font-mono-tabular">
+            <span className="text-accent-ink font-mono-tabular">
               ({formatPriceBRL(filters.priceMax)})
             </span>
           ) : null}
@@ -166,7 +169,7 @@ export function MotorcycleFilters({
           onChange={(e) =>
             update({ priceMax: e.target.value ? Number(e.target.value) : null })
           }
-          className="w-full h-11 px-3 rounded-lg bg-[#0D0F0F] border border-[#303434] text-sm text-[#F3F3F3] focus:outline-none focus:border-[#B7F21B]"
+          className={selectClass}
         >
           <option value="">Sem limite de preço</option>
           <option value="30000">Até R$ 30.000</option>
@@ -180,7 +183,7 @@ export function MotorcycleFilters({
       <div>
         <label
           htmlFor="filter-mileage"
-          className="block text-xs font-medium uppercase tracking-wider text-[#858989] mb-2"
+          className="block text-xs font-medium uppercase tracking-wider text-ink-secondary mb-2"
         >
           Quilometragem máxima
         </label>
@@ -190,7 +193,7 @@ export function MotorcycleFilters({
           onChange={(e) =>
             update({ mileageMax: e.target.value ? Number(e.target.value) : null })
           }
-          className="w-full h-11 px-3 rounded-lg bg-[#0D0F0F] border border-[#303434] text-sm text-[#F3F3F3] focus:outline-none focus:border-[#B7F21B]"
+          className={selectClass}
         >
           <option value="">Qualquer quilometragem</option>
           <option value="0">Apenas 0 KM</option>
@@ -203,7 +206,7 @@ export function MotorcycleFilters({
       <div>
         <label
           htmlFor="filter-sort"
-          className="block text-xs font-medium uppercase tracking-wider text-[#858989] mb-2"
+          className="block text-xs font-medium uppercase tracking-wider text-ink-secondary mb-2"
         >
           Ordenar por
         </label>
@@ -211,7 +214,7 @@ export function MotorcycleFilters({
           id="filter-sort"
           value={sortBy}
           onChange={(e) => onSortChange(e.target.value as SortOption)}
-          className="w-full h-11 px-3 rounded-lg bg-[#0D0F0F] border border-[#303434] text-sm text-[#F3F3F3] focus:outline-none focus:border-[#B7F21B]"
+          className={selectClass}
         >
           <option value="recent">Mais recentes</option>
           <option value="price_asc">Menor preço</option>
@@ -224,7 +227,7 @@ export function MotorcycleFilters({
       <button
         type="button"
         onClick={onReset}
-        className="w-full h-10 inline-flex items-center justify-center gap-2 rounded-lg border border-[#303434] bg-[#1C1F1F] text-xs font-semibold uppercase tracking-wider text-[#F3F3F3] hover:bg-[#252727] transition-colors"
+        className="w-full h-10 inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-card-elevated text-xs font-semibold uppercase tracking-wider text-ink hover:bg-card-hover transition-colors"
       >
         <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
         <span>Limpar filtros</span>
@@ -237,11 +240,11 @@ export function MotorcycleFilters({
       {/* Desktop Sidebar Filters */}
       <aside
         aria-label="Filtros do catálogo"
-        className="hidden lg:block bg-[#141515] border border-[#242727] rounded-xl p-5 sticky top-24"
+        className="hidden lg:block bg-card border border-line-subtle rounded-xl p-5 sticky top-24 shadow-xs dark:shadow-none"
       >
-        <div className="flex items-center gap-2 pb-4 mb-5 border-b border-[#242727]">
-          <SlidersHorizontal className="w-4 h-4 text-[#B7F21B]" aria-hidden="true" />
-          <h3 className="font-display text-sm font-bold uppercase tracking-wider text-[#F3F3F3]">
+        <div className="flex items-center gap-2 pb-4 mb-5 border-b border-line-subtle">
+          <SlidersHorizontal className="w-4 h-4 text-accent-ink" aria-hidden="true" />
+          <h3 className="font-display text-sm font-bold uppercase tracking-wider text-ink">
             Filtros
           </h3>
         </div>
@@ -251,15 +254,15 @@ export function MotorcycleFilters({
       {/* Mobile Drawer Filters */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-[75] lg:hidden bg-black/80 backdrop-blur-sm flex justify-end"
+          className="fixed inset-0 z-[75] lg:hidden bg-black/75 backdrop-blur-sm flex justify-end"
           role="dialog"
           aria-modal="true"
           aria-label="Filtros do catálogo"
         >
-          <div className="w-full max-w-sm bg-[#141515] border-l border-[#303434] h-full flex flex-col">
-            <div className="px-5 h-16 border-b border-[#242727] flex items-center justify-between">
+          <div className="w-full max-w-sm bg-card border-l border-line h-full flex flex-col text-ink">
+            <div className="px-5 h-16 border-b border-line-subtle flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <SlidersHorizontal className="w-4 h-4 text-[#B7F21B]" aria-hidden="true" />
+                <SlidersHorizontal className="w-4 h-4 text-accent-ink" aria-hidden="true" />
                 <span className="font-display text-sm font-bold uppercase tracking-wider">
                   Filtros e Ordenação
                 </span>
@@ -268,13 +271,13 @@ export function MotorcycleFilters({
                 type="button"
                 onClick={onCloseMobile}
                 aria-label="Fechar filtros"
-                className="w-10 h-10 inline-flex items-center justify-center rounded-lg bg-[#1C1F1F] text-[#F3F3F3]"
+                className="w-10 h-10 inline-flex items-center justify-center rounded-lg bg-card-elevated text-ink"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-5">{fieldsContent}</div>
-            <div className="p-4 border-t border-[#242727]">
+            <div className="p-4 border-t border-line-subtle">
               <button
                 type="button"
                 onClick={onCloseMobile}

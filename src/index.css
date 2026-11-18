@@ -1,6 +1,39 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
+  --color-background: #F6F7F6;
+  --color-background-alt: #ECEEED;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #F1F3F2;
+  --color-surface-hover: #E4E8E6;
+
+  --color-border: #D2D7D5;
+  --color-border-subtle: #E2E6E4;
+  --color-border-strong: #9BA3A0;
+
+  --color-primary: #B7F21B;
+  --color-primary-hover: #C8F744;
+  --color-primary-active: #9ED612;
+  --color-primary-muted: rgba(183, 242, 27, 0.16);
+  --color-accent-ink: #4A6800;
+
+  --color-text-primary: #101212;
+  --color-text-secondary: #525858;
+  --color-text-muted: #6C7373;
+  --color-text-on-primary: #101010;
+
+  --color-success: #3E6B00;
+  --color-warning: #B47200;
+  --color-danger: #D93838;
+  --color-info: #0D6EBD;
+
+  --font-display: "SU Grotesk Grand", "Sora", sans-serif;
+  --font-sans: "Montserrat", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+.dark {
   --color-background: #080909;
   --color-background-alt: #0D0F0F;
   --color-surface: #141515;
@@ -15,6 +48,7 @@
   --color-primary-hover: #D0FF36;
   --color-primary-active: #8AB90B;
   --color-primary-muted: rgba(183, 242, 27, 0.12);
+  --color-accent-ink: #B7F21B;
 
   --color-text-primary: #F3F3F3;
   --color-text-secondary: #858989;
@@ -25,10 +59,21 @@
   --color-warning: #F3B43C;
   --color-danger: #F15B5B;
   --color-info: #7CC8FF;
+}
 
-  --font-display: "SU Grotesk Grand", "Sora", sans-serif;
-  --font-sans: "Montserrat", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+@theme inline {
+  --color-canvas: var(--color-background);
+  --color-canvas-alt: var(--color-background-alt);
+  --color-card: var(--color-surface);
+  --color-card-elevated: var(--color-surface-elevated);
+  --color-card-hover: var(--color-surface-hover);
+  --color-line: var(--color-border);
+  --color-line-subtle: var(--color-border-subtle);
+  --color-line-strong: var(--color-border-strong);
+  --color-ink: var(--color-text-primary);
+  --color-ink-secondary: var(--color-text-secondary);
+  --color-ink-muted: var(--color-text-muted);
+  --color-accent-ink: var(--color-accent-ink);
 }
 
 @layer base {
@@ -62,9 +107,15 @@
 
 .palazzo-grid-bg {
   background-image:
+    linear-gradient(to right, rgba(16, 18, 18, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 18, 18, 0.045) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.dark .palazzo-grid-bg {
+  background-image:
     linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 48px 48px;
 }
 
 .palazzo-diagonal-stripes {

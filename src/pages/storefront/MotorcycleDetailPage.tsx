@@ -65,7 +65,7 @@ export function MotorcycleDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#080909] text-[#F3F3F3]">
+      <div className="min-h-screen flex flex-col bg-canvas text-ink">
         <Header settings={settings} />
         <main className="flex-1 max-w-[1360px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <LoadingState count={3} />
@@ -77,7 +77,7 @@ export function MotorcycleDetailPage() {
 
   if (!motorcycle) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#080909] text-[#F3F3F3]">
+      <div className="min-h-screen flex flex-col bg-canvas text-ink">
         <Header settings={settings} />
         <main className="flex-1 max-w-[1360px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <EmptyState
@@ -88,7 +88,7 @@ export function MotorcycleDetailPage() {
           <div className="mt-6 text-center">
             <Link
               to="/motos"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-[#B7F21B] hover:underline"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-accent-ink hover:underline"
             >
               <ArrowLeft className="w-4 h-4" />
               Voltar para o catálogo
@@ -141,7 +141,7 @@ export function MotorcycleDetailPage() {
   const financingMessage = buildMotorcycleWhatsAppMessage(motorcycle, 'financing');
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#080909] text-[#F3F3F3] pb-20 lg:pb-0">
+    <div className="min-h-screen flex flex-col bg-canvas text-ink pb-20 lg:pb-0">
       <Header settings={settings} />
 
       <main className="flex-1 py-8 sm:py-12">
@@ -149,23 +149,23 @@ export function MotorcycleDetailPage() {
           {/* Breadcrumb */}
           <nav
             aria-label="Breadcrumb"
-            className="flex flex-wrap items-center gap-2 text-xs text-[#858989] mb-6"
+            className="flex flex-wrap items-center gap-2 text-xs text-ink-secondary mb-6"
           >
-            <Link to="/" className="hover:text-[#F3F3F3]">
+            <Link to="/" className="hover:text-ink">
               Início
             </Link>
             <span aria-hidden="true">/</span>
-            <Link to="/motos" className="hover:text-[#F3F3F3]">
+            <Link to="/motos" className="hover:text-ink">
               Estoque
             </Link>
             {motorcycle.categoryName && (
               <>
                 <span aria-hidden="true">/</span>
-                <span className="text-[#F3F3F3]">{motorcycle.categoryName}</span>
+                <span className="text-ink">{motorcycle.categoryName}</span>
               </>
             )}
             <span aria-hidden="true">/</span>
-            <span className="text-[#B7F21B] truncate">{motorcycle.name}</span>
+            <span className="text-accent-ink truncate">{motorcycle.name}</span>
           </nav>
 
           {/* Main 2-Column PDP Layout */}
@@ -181,31 +181,31 @@ export function MotorcycleDetailPage() {
 
               {/* Description */}
               {motorcycle.description && (
-                <section className="bg-[#141515] border border-[#242727] rounded-xl p-6 sm:p-8">
-                  <h2 className="font-display text-lg font-bold uppercase tracking-wide text-[#F3F3F3] mb-3">
+                <section className="bg-card border border-line-subtle rounded-xl p-6 sm:p-8 shadow-xs dark:shadow-none">
+                  <h2 className="font-display text-lg font-bold uppercase tracking-wide text-ink mb-3">
                     Sobre esta Máquina
                   </h2>
-                  <p className="text-sm sm:text-base text-[#858989] leading-relaxed whitespace-pre-line">
+                  <p className="text-sm sm:text-base text-ink-secondary leading-relaxed whitespace-pre-line">
                     {motorcycle.description}
                   </p>
                 </section>
               )}
 
               {/* Technical Specifications Table */}
-              <section className="bg-[#141515] border border-[#242727] rounded-xl p-6 sm:p-8">
-                <h2 className="font-display text-lg font-bold uppercase tracking-wide text-[#F3F3F3] mb-5">
+              <section className="bg-card border border-line-subtle rounded-xl p-6 sm:p-8 shadow-xs dark:shadow-none">
+                <h2 className="font-display text-lg font-bold uppercase tracking-wide text-ink mb-5">
                   Ficha Técnica
                 </h2>
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
                   {specs.map((spec) => (
                     <div
                       key={spec.label}
-                      className="flex items-center justify-between gap-4 py-2.5 border-b border-[#242727]"
+                      className="flex items-center justify-between gap-4 py-2.5 border-b border-line-subtle"
                     >
-                      <dt className="text-xs uppercase tracking-wider text-[#858989]">
+                      <dt className="text-xs uppercase tracking-wider text-ink-secondary">
                         {spec.label}
                       </dt>
-                      <dd className="text-sm font-semibold text-[#F3F3F3] font-mono-tabular text-right">
+                      <dd className="text-sm font-semibold text-ink font-mono-tabular text-right">
                         {spec.value}
                       </dd>
                     </div>
@@ -215,18 +215,18 @@ export function MotorcycleDetailPage() {
 
               {/* Features List */}
               {motorcycle.features && motorcycle.features.length > 0 && (
-                <section className="bg-[#141515] border border-[#242727] rounded-xl p-6 sm:p-8">
-                  <h2 className="font-display text-lg font-bold uppercase tracking-wide text-[#F3F3F3] mb-4">
+                <section className="bg-card border border-line-subtle rounded-xl p-6 sm:p-8 shadow-xs dark:shadow-none">
+                  <h2 className="font-display text-lg font-bold uppercase tracking-wide text-ink mb-4">
                     Equipamentos e Diferenciais
                   </h2>
                   <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {motorcycle.features.map((feat, idx) => (
                       <li
                         key={idx}
-                        className="flex items-start gap-2.5 text-sm text-[#F3F3F3]/90"
+                        className="flex items-start gap-2.5 text-sm text-ink/90"
                       >
                         <Check
-                          className="w-4 h-4 text-[#B7F21B] shrink-0 mt-0.5"
+                          className="w-4 h-4 text-accent-ink shrink-0 mt-0.5"
                           aria-hidden="true"
                         />
                         <span>{feat}</span>
@@ -239,9 +239,9 @@ export function MotorcycleDetailPage() {
 
             {/* Right Column: Sticky Commercial Conversion Module */}
             <aside className="lg:col-span-5 lg:sticky lg:top-24 space-y-5">
-              <div className="bg-[#141515] border border-[#303434] rounded-xl p-6 sm:p-8 space-y-6">
+              <div className="bg-card border border-line rounded-xl p-6 sm:p-8 space-y-6 shadow-xs dark:shadow-none">
                 <div>
-                  <div className="flex flex-wrap items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#858989]">
+                  <div className="flex flex-wrap items-center gap-2 text-xs font-medium uppercase tracking-wider text-ink-secondary">
                     <span>{motorcycle.brand}</span>
                     {motorcycle.categoryName && (
                       <>
@@ -255,17 +255,17 @@ export function MotorcycleDetailPage() {
                     <span
                       className={
                         motorcycle.status === 'available'
-                          ? 'text-[#B7F21B] font-semibold'
+                          ? 'text-accent-ink font-semibold'
                           : motorcycle.status === 'reserved'
-                            ? 'text-[#F3B43C] font-semibold'
-                            : 'text-[#F15B5B] font-semibold'
+                            ? 'text-[#B47200] dark:text-[#F3B43C] font-semibold'
+                            : 'text-[#D93838] dark:text-[#F15B5B] font-semibold'
                       }
                     >
                       {getStatusLabel(motorcycle.status)}
                     </span>
                   </div>
 
-                  <h1 className="font-display text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-[#F3F3F3] mt-2 leading-tight">
+                  <h1 className="font-display text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-ink mt-2 leading-tight">
                     {motorcycle.name}
                   </h1>
 
@@ -274,7 +274,7 @@ export function MotorcycleDetailPage() {
                       className={`mt-2 inline-block px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wider ${
                         isOpportunity && motorcycle.status === 'available'
                           ? 'bg-[#B7F21B] text-[#101010]'
-                          : 'bg-[#B7F21B]/12 text-[#B7F21B]'
+                          : 'bg-[#B7F21B]/20 text-accent-ink'
                       }`}
                     >
                       {displayBadge}
@@ -283,21 +283,21 @@ export function MotorcycleDetailPage() {
                 </div>
 
                 {/* Price Block */}
-                <div className="pt-5 border-t border-[#242727]">
+                <div className="pt-5 border-t border-line-subtle">
                   {hasPromo && (
-                    <p className="text-sm text-[#858989] line-through font-mono-tabular">
+                    <p className="text-sm text-ink-secondary line-through font-mono-tabular">
                       De {formatPriceBRL(motorcycle.oldPrice)}
                     </p>
                   )}
                   <p
                     className={`font-display text-3xl sm:text-4xl font-extrabold font-mono-tabular tracking-tight mt-0.5 ${
-                      hasPromo || isOpportunity ? 'text-[#B7F21B]' : 'text-[#F3F3F3]'
+                      hasPromo || isOpportunity ? 'text-accent-ink' : 'text-ink'
                     }`}
                   >
                     {formatPriceBRL(motorcycle.price)}
                   </p>
                   {(motorcycle.promoText || (isOpportunity && motorcycle.status === 'available')) && (
-                    <p className="text-xs font-semibold text-[#B7F21B] mt-1.5">
+                    <p className="text-xs font-semibold text-accent-ink mt-1.5">
                       {motorcycle.promoText ||
                         'Condição imperdível por tempo limitado — unidade sujeita à venda imediata.'}
                     </p>
@@ -305,28 +305,28 @@ export function MotorcycleDetailPage() {
                 </div>
 
                 {/* Quick Metrics */}
-                <div className="grid grid-cols-3 gap-3 py-4 border-y border-[#242727] text-center">
+                <div className="grid grid-cols-3 gap-3 py-4 border-y border-line-subtle text-center">
                   <div>
-                    <span className="block text-[11px] uppercase tracking-wider text-[#858989]">
+                    <span className="block text-[11px] uppercase tracking-wider text-ink-secondary">
                       Ano
                     </span>
-                    <span className="font-mono-tabular text-sm font-bold text-[#F3F3F3] mt-0.5 block">
+                    <span className="font-mono-tabular text-sm font-bold text-ink mt-0.5 block">
                       {motorcycle.yearModel}
                     </span>
                   </div>
                   <div>
-                    <span className="block text-[11px] uppercase tracking-wider text-[#858989]">
+                    <span className="block text-[11px] uppercase tracking-wider text-ink-secondary">
                       KM
                     </span>
-                    <span className="font-mono-tabular text-sm font-bold text-[#F3F3F3] mt-0.5 block">
+                    <span className="font-mono-tabular text-sm font-bold text-ink mt-0.5 block">
                       {formatMileage(motorcycle.mileage)}
                     </span>
                   </div>
                   <div>
-                    <span className="block text-[11px] uppercase tracking-wider text-[#858989]">
+                    <span className="block text-[11px] uppercase tracking-wider text-ink-secondary">
                       Motor
                     </span>
-                    <span className="font-mono-tabular text-sm font-bold text-[#F3F3F3] mt-0.5 block">
+                    <span className="font-mono-tabular text-sm font-bold text-ink mt-0.5 block">
                       {formatEngineCc(motorcycle.engineCc)}
                     </span>
                   </div>
@@ -336,9 +336,9 @@ export function MotorcycleDetailPage() {
                 {(motorcycle.paymentInfo ||
                   motorcycle.downPaymentInfo ||
                   motorcycle.installmentInfo) && (
-                  <div className="space-y-2 text-xs sm:text-sm text-[#858989]">
-                    <div className="flex items-center gap-2 text-[#F3F3F3] font-semibold">
-                      <CreditCard className="w-4 h-4 text-[#B7F21B]" aria-hidden="true" />
+                  <div className="space-y-2 text-xs sm:text-sm text-ink-secondary">
+                    <div className="flex items-center gap-2 text-ink font-semibold">
+                      <CreditCard className="w-4 h-4 text-accent-ink" aria-hidden="true" />
                       <span>Condições Comerciais</span>
                     </div>
                     {motorcycle.downPaymentInfo && <p>{motorcycle.downPaymentInfo}</p>}
@@ -366,8 +366,8 @@ export function MotorcycleDetailPage() {
                   />
                 </div>
 
-                <div className="pt-4 border-t border-[#242727] flex items-center gap-2.5 text-xs text-[#858989]">
-                  <ShieldCheck className="w-4 h-4 text-[#B7F21B] shrink-0" aria-hidden="true" />
+                <div className="pt-4 border-t border-line-subtle flex items-center gap-2.5 text-xs text-ink-secondary">
+                  <ShieldCheck className="w-4 h-4 text-accent-ink shrink-0" aria-hidden="true" />
                   <span>Procedência verificada e atendimento consultivo Palazzo Motos.</span>
                 </div>
               </div>
@@ -376,19 +376,19 @@ export function MotorcycleDetailPage() {
 
           {/* Related Motorcycles */}
           {related.length > 0 && (
-            <section className="mt-16 pt-12 border-t border-[#242727]">
+            <section className="mt-16 pt-12 border-t border-line-subtle">
               <div className="flex items-end justify-between mb-8">
                 <div>
-                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#B7F21B]">
+                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-ink">
                     Sugestões do Showroom
                   </span>
-                  <h2 className="font-display text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-[#F3F3F3] mt-1">
+                  <h2 className="font-display text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-ink mt-1">
                     Motos Relacionadas
                   </h2>
                 </div>
                 <Link
                   to="/motos"
-                  className="text-xs sm:text-sm font-semibold text-[#B7F21B] hover:underline"
+                  className="text-xs sm:text-sm font-semibold text-accent-ink hover:underline"
                 >
                   Ver todo estoque
                 </Link>
@@ -409,12 +409,12 @@ export function MotorcycleDetailPage() {
       </main>
 
       {/* Fixed Mobile Bottom Conversion Bar (strictly compact <= 72px) */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-[#0D0F0F]/95 backdrop-blur-md border-t border-[#242727] px-4 py-2.5 flex items-center justify-between gap-3">
+      <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-canvas-alt/95 backdrop-blur-md border-t border-line-subtle px-4 py-2.5 flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <span className="block text-[10px] uppercase tracking-wider text-[#858989] truncate">
+          <span className="block text-[10px] uppercase tracking-wider text-ink-secondary truncate">
             {motorcycle.brand} {motorcycle.model}
           </span>
-          <span className="font-display text-base font-bold font-mono-tabular text-[#B7F21B]">
+          <span className="font-display text-base font-bold font-mono-tabular text-accent-ink">
             {formatPriceBRL(motorcycle.price)}
           </span>
         </div>

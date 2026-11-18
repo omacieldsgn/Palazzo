@@ -1,6 +1,8 @@
 export type MotorcycleStatus = 'available' | 'reserved' | 'sold' | 'hidden';
 export type MotorcycleCondition = 'new' | 'used';
 export type CoverFit = 'cover' | 'contain';
+export type HeroShadowDirection = 'left' | 'right' | 'top' | 'bottom' | 'all';
+export type ThemeMode = 'dark' | 'light';
 
 export interface MotorcycleImage {
   id: string;
@@ -95,11 +97,20 @@ export interface SiteSettings {
   email?: string;
   address?: string;
   openingHours?: string;
+  defaultTheme?: ThemeMode;
   heroHeadline: string;
   heroSubheadline?: string;
   heroImageDesktop?: string;
   heroImageMobile?: string;
   heroOverlayShadow?: boolean;
+  heroShadowColor?: string;
+  heroShadowOpacity?: number;
+  heroShadowDirection?: HeroShadowDirection;
+  heroShadowReach?: number;
+  heroHighlightBold?: boolean;
+  heroHighlightItalic?: boolean;
+  heroHighlightBgEnabled?: boolean;
+  heroHighlightBgColor?: string;
   heroImagePosition?: string;
   heroImageFit?: CoverFit;
   heroMobileImagePosition?: string;

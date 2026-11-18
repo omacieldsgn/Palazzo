@@ -50,11 +50,6 @@ export function HomePage() {
     return counts;
   }, [motorcycles]);
 
-  const availableCount = useMemo(
-    () => motorcycles.filter((m) => m.published && m.status === 'available').length,
-    [motorcycles],
-  );
-
   const opportunityMotorcycles = useMemo(
     () =>
       sortMotorcycles(
@@ -104,13 +99,7 @@ export function HomePage() {
 
     switch (key) {
       case 'hero':
-        return (
-          <HeroSection
-            key="hero"
-            settings={settings}
-            availableCount={availableCount}
-          />
-        );
+        return <HeroSection key="hero" settings={settings} />;
 
       case 'categories':
         return (
@@ -124,24 +113,24 @@ export function HomePage() {
             {!loading && opportunityMotorcycles.length > 0 && (
               <section
                 id="ofertas-imperdiveis"
-                className="py-14 sm:py-18 bg-[#0B0D0D] border-b border-[#B7F21B]/25"
+                className="py-12 sm:py-18 bg-canvas-alt border-b border-[#4A6800]/25 dark:border-[#B7F21B]/25"
               >
                 <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
                   <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-9">
                     <div>
-                      <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#B7F21B]">
+                      <span className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-ink">
                         Oportunidades de Showroom · Estoque Limitado
                       </span>
-                      <h2 className="font-display text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-[#F3F3F3] mt-1">
+                      <h2 className="font-display text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-ink mt-1">
                         OFERTAS IMPERDÍVEIS
                       </h2>
-                      <p className="text-sm text-[#858989] mt-2">
+                      <p className="text-sm text-ink-secondary mt-2">
                         Condições especiais por tempo limitado. Unidades únicas sujeitas à venda imediata.
                       </p>
                     </div>
                     <Link
                       to="/categoria/ofertas-imperdiveis"
-                      className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#B7F21B] hover:text-[#D0FF36] transition-colors whitespace-nowrap"
+                      className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-wider text-accent-ink hover:opacity-80 transition-opacity whitespace-nowrap"
                     >
                       <span>Ver todas as ofertas</span>
                       <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -169,21 +158,21 @@ export function HomePage() {
         return (
           <section
             key="featured"
-            className="py-16 sm:py-20 bg-[#080909] border-b border-[#242727]"
+            className="py-12 sm:py-20 bg-canvas border-b border-line-subtle"
           >
             <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-10">
                 <div>
-                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#B7F21B]">
+                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-ink">
                     02. Seleção Palazzo
                   </span>
-                  <h2 className="font-display text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-[#F3F3F3] mt-1">
+                  <h2 className="font-display text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-ink mt-1">
                     MÁQUINAS EM DESTAQUE
                   </h2>
                 </div>
                 <Link
                   to="/motos"
-                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#B7F21B] hover:text-[#D0FF36] transition-colors whitespace-nowrap"
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-wider text-accent-ink hover:opacity-80 transition-opacity whitespace-nowrap"
                 >
                   <span>Explorar todas</span>
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -216,18 +205,18 @@ export function HomePage() {
           <section
             key="catalog"
             id="estoque"
-            className="py-16 sm:py-20 bg-[#080909] border-b border-[#242727]"
+            className="py-12 sm:py-20 bg-canvas border-b border-line-subtle"
           >
             <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
                 <div>
-                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#B7F21B]">
+                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-ink">
                     03. Catálogo Atualizado
                   </span>
-                  <h2 className="font-display text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-[#F3F3F3] mt-1">
+                  <h2 className="font-display text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-ink mt-1">
                     NOSSO ESTOQUE
                   </h2>
-                  <p className="text-sm sm:text-base text-[#858989] mt-2">
+                  <p className="text-sm sm:text-base text-ink-secondary mt-2">
                     Explore as máquinas disponíveis na Palazzo.
                   </p>
                 </div>
@@ -238,7 +227,7 @@ export function HomePage() {
                     aria-label="Ordenar estoque"
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as SortOption)}
-                    className="h-11 px-3.5 rounded-lg bg-[#141515] border border-[#303434] text-sm text-[#F3F3F3] focus:outline-none focus:border-[#B7F21B] shrink-0"
+                    className="h-11 px-3.5 rounded-lg bg-card border border-line text-sm text-ink focus:outline-none focus:border-[#B7F21B] shrink-0"
                   >
                     <option value="recent">Mais recentes</option>
                     <option value="price_asc">Menor preço</option>
@@ -281,7 +270,7 @@ export function HomePage() {
                   <div className="mt-10 flex justify-center">
                     <Link
                       to="/motos"
-                      className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-lg border border-[#303434] bg-[#141515] hover:border-[#B7F21B] hover:text-[#B7F21B] text-sm font-bold uppercase tracking-wider text-[#F3F3F3] transition-colors"
+                      className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-lg border border-line bg-card hover:border-[#B7F21B] hover:text-accent-ink text-sm font-bold uppercase tracking-wider text-ink transition-colors"
                     >
                       <span>VER TODAS AS MOTOS</span>
                       <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -305,7 +294,7 @@ export function HomePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#080909] text-[#F3F3F3]">
+    <div className="min-h-screen flex flex-col bg-canvas text-ink">
       <Header settings={settings} />
       <main className="flex-1">
         {settings.sectionsOrder.map((sectionKey) => renderSection(sectionKey))}

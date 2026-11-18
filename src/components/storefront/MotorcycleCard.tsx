@@ -49,11 +49,11 @@ export function MotorcycleCard({
           : motorcycle.badge || (motorcycle.isDemo ? 'DEMO' : null);
 
   return (
-    <article className="group bg-[#141515] border border-[#242727] hover:border-[#303434] rounded-xl overflow-hidden flex flex-col transition-transform duration-200 hover:-translate-y-0.5">
+    <article className="group bg-card border border-line-subtle hover:border-line rounded-xl overflow-hidden flex flex-col transition-transform duration-200 hover:-translate-y-0.5 shadow-xs dark:shadow-none">
       {/* 4:3 Standardized Showroom Media Container */}
       <Link
         to={`/motos/${motorcycle.slug}`}
-        className="relative block aspect-[4/3] bg-[#0D0F0F] overflow-hidden"
+        className="relative block aspect-[4/3] bg-canvas-alt overflow-hidden"
       >
         <ResilientImage
           src={coverImg}
@@ -70,7 +70,7 @@ export function MotorcycleCard({
           <span
             className={`absolute top-3 left-3 px-2.5 py-1 rounded text-[11px] font-bold uppercase tracking-wider ${
               motorcycle.status === 'sold'
-                ? 'bg-[#F15B5B] text-white'
+                ? 'bg-[#D93838] dark:bg-[#F15B5B] text-white'
                 : motorcycle.status === 'reserved'
                   ? 'bg-[#F3B43C] text-[#101010]'
                   : isOpportunity
@@ -86,7 +86,7 @@ export function MotorcycleCard({
       {/* Card Body */}
       <div className="p-5 flex-1 flex flex-col">
         {/* Clean Unboxed Metadata Line */}
-        <div className="flex items-center gap-2 text-xs font-medium text-[#858989] uppercase tracking-wider truncate">
+        <div className="flex items-center gap-2 text-xs font-medium text-ink-secondary uppercase tracking-wider truncate">
           <span>{motorcycle.brand}</span>
           {motorcycle.categoryName && (
             <>
@@ -100,13 +100,13 @@ export function MotorcycleCard({
 
         <Link
           to={`/motos/${motorcycle.slug}`}
-          className="mt-2 font-display text-lg sm:text-xl font-semibold text-[#F3F3F3] group-hover:text-[#B7F21B] transition-colors leading-snug line-clamp-2"
+          className="mt-2 font-display text-lg sm:text-xl font-semibold text-ink group-hover:text-accent-ink transition-colors leading-snug line-clamp-2"
         >
           {motorcycle.name}
         </Link>
 
         {/* Technical Spec Row */}
-        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#858989] font-mono-tabular">
+        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-secondary font-mono-tabular">
           <span>{formatMileage(motorcycle.mileage)}</span>
           {motorcycle.engineCc ? (
             <>
@@ -118,10 +118,10 @@ export function MotorcycleCard({
           <span
             className={
               motorcycle.status === 'available'
-                ? 'text-[#B7F21B]'
+                ? 'text-accent-ink font-semibold'
                 : motorcycle.status === 'reserved'
-                  ? 'text-[#F3B43C]'
-                  : 'text-[#F15B5B]'
+                  ? 'text-[#B47200] dark:text-[#F3B43C] font-semibold'
+                  : 'text-[#D93838] dark:text-[#F15B5B] font-semibold'
             }
           >
             {getStatusLabel(motorcycle.status)}
@@ -129,16 +129,16 @@ export function MotorcycleCard({
         </div>
 
         {/* Price & Actions Footer */}
-        <div className="mt-auto pt-4 border-t border-[#242727] flex flex-col gap-3.5">
+        <div className="mt-auto pt-4 border-t border-line-subtle flex flex-col gap-3.5">
           <div className="min-w-0">
             {hasPromo && (
-              <p className="text-xs text-[#858989] line-through font-mono-tabular mb-0.5">
+              <p className="text-xs text-ink-secondary line-through font-mono-tabular mb-0.5">
                 {formatPriceBRL(motorcycle.oldPrice)}
               </p>
             )}
             <p
               className={`font-display text-2xl font-bold font-mono-tabular tracking-tight whitespace-nowrap ${
-                hasPromo ? 'text-[#B7F21B]' : 'text-[#F3F3F3]'
+                hasPromo ? 'text-accent-ink' : 'text-ink'
               }`}
             >
               {formatPriceBRL(motorcycle.price)}
@@ -152,7 +152,7 @@ export function MotorcycleCard({
               rel="noopener noreferrer"
               aria-label={`Falar no WhatsApp sobre ${motorcycle.name}`}
               title="Tenho interesse no WhatsApp"
-              className="w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-lg border border-[#303434] bg-[#1C1F1F] text-[#B7F21B] hover:border-[#B7F21B] hover:bg-[#B7F21B]/10 transition-colors"
+              className="w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-lg border border-line bg-card-elevated text-accent-ink hover:border-[#B7F21B] hover:bg-[#B7F21B]/10 transition-colors"
             >
               <MessageCircle className="w-4 h-4" />
             </a>

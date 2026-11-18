@@ -34,7 +34,7 @@ export function Footer({ settings, categories }: FooterProps) {
   return (
     <footer
       id="contato-rodape"
-      className="bg-[#080909] border-t border-[#242727] text-[#858989]"
+      className="bg-canvas border-t border-line-subtle text-ink-secondary"
     >
       <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
@@ -59,7 +59,7 @@ export function Footer({ settings, categories }: FooterProps) {
 
           {/* Navigation Column */}
           <div className="lg:col-span-2 space-y-3">
-            <h3 className="font-display text-xs font-bold uppercase tracking-[0.15em] text-[#F3F3F3]">
+            <h3 className="font-display text-xs font-bold uppercase tracking-[0.15em] text-ink">
               Navegação
             </h3>
             <ul className="space-y-2.5 text-sm">
@@ -67,13 +67,13 @@ export function Footer({ settings, categories }: FooterProps) {
                 <Link
                   to="/"
                   onClick={(e) => handleAnchorClick(e, '/')}
-                  className="hover:text-[#B7F21B] transition-colors"
+                  className="hover:text-accent-ink transition-colors"
                 >
                   Início
                 </Link>
               </li>
               <li>
-                <Link to="/motos" className="hover:text-[#B7F21B] transition-colors">
+                <Link to="/motos" className="hover:text-accent-ink transition-colors">
                   Nosso Estoque
                 </Link>
               </li>
@@ -81,13 +81,13 @@ export function Footer({ settings, categories }: FooterProps) {
                 <Link
                   to="/#sobre"
                   onClick={(e) => handleAnchorClick(e, '/#sobre')}
-                  className="hover:text-[#B7F21B] transition-colors"
+                  className="hover:text-accent-ink transition-colors"
                 >
                   Sobre a Palazzo
                 </Link>
               </li>
               <li>
-                <Link to="/admin" className="hover:text-[#B7F21B] transition-colors">
+                <Link to="/admin" className="hover:text-accent-ink transition-colors">
                   Painel Administrativo
                 </Link>
               </li>
@@ -96,7 +96,7 @@ export function Footer({ settings, categories }: FooterProps) {
 
           {/* Categories Column */}
           <div className="lg:col-span-2 space-y-3">
-            <h3 className="font-display text-xs font-bold uppercase tracking-[0.15em] text-[#F3F3F3]">
+            <h3 className="font-display text-xs font-bold uppercase tracking-[0.15em] text-ink">
               Categorias
             </h3>
             <ul className="space-y-2.5 text-sm">
@@ -104,7 +104,7 @@ export function Footer({ settings, categories }: FooterProps) {
                 <li key={cat.id}>
                   <Link
                     to={`/categoria/${cat.slug}`}
-                    className="hover:text-[#B7F21B] transition-colors"
+                    className="hover:text-accent-ink transition-colors"
                   >
                     {cat.name}
                   </Link>
@@ -115,37 +115,37 @@ export function Footer({ settings, categories }: FooterProps) {
 
           {/* Contact Column */}
           <div className="lg:col-span-4 space-y-3">
-            <h3 className="font-display text-xs font-bold uppercase tracking-[0.15em] text-[#F3F3F3]">
+            <h3 className="font-display text-xs font-bold uppercase tracking-[0.15em] text-ink">
               Atendimento &amp; Loja
             </h3>
             <ul className="space-y-3 text-sm">
               {settings.phone && (
                 <li className="flex items-center gap-2.5">
-                  <Phone className="w-4 h-4 text-[#B7F21B] shrink-0" aria-hidden="true" />
+                  <Phone className="w-4 h-4 text-accent-ink shrink-0" aria-hidden="true" />
                   <span>{settings.phone}</span>
                 </li>
               )}
               {settings.email && (
                 <li className="flex items-center gap-2.5">
-                  <Mail className="w-4 h-4 text-[#B7F21B] shrink-0" aria-hidden="true" />
+                  <Mail className="w-4 h-4 text-accent-ink shrink-0" aria-hidden="true" />
                   <span>{settings.email}</span>
                 </li>
               )}
               {settings.instagram && (
                 <li className="flex items-center gap-2.5">
-                  <Instagram className="w-4 h-4 text-[#B7F21B] shrink-0" aria-hidden="true" />
+                  <Instagram className="w-4 h-4 text-accent-ink shrink-0" aria-hidden="true" />
                   <span>{settings.instagram}</span>
                 </li>
               )}
               {settings.address && (
                 <li className="flex items-start gap-2.5">
-                  <MapPin className="w-4 h-4 text-[#B7F21B] shrink-0 mt-0.5" aria-hidden="true" />
+                  <MapPin className="w-4 h-4 text-accent-ink shrink-0 mt-0.5" aria-hidden="true" />
                   <span>{settings.address}</span>
                 </li>
               )}
               {settings.openingHours && (
                 <li className="flex items-start gap-2.5">
-                  <Clock className="w-4 h-4 text-[#B7F21B] shrink-0 mt-0.5" aria-hidden="true" />
+                  <Clock className="w-4 h-4 text-accent-ink shrink-0 mt-0.5" aria-hidden="true" />
                   <span>{settings.openingHours}</span>
                 </li>
               )}
@@ -153,7 +153,7 @@ export function Footer({ settings, categories }: FooterProps) {
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-[#242727] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#5D6262]">
+        <div className="mt-12 pt-6 border-t border-line-subtle flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-ink-muted">
           <p>
             © {currentYear} {settings.companyName || 'Palazzo Motos'}. Todos os direitos reservados.
           </p>

@@ -17,7 +17,13 @@ import {
   paginateItems,
   sortMotorcycles,
 } from './catalog';
-import { categorySchema, motorcycleFormSchema } from './validations';
+import { categorySchema, motorcycleFormSchema, siteSettingsSchema } from './validations';
+import {
+  buildHeroShadowGradient,
+  getContrastInk,
+  isLightColor,
+  parseHeadlineSegments,
+} from './heroStyles';
 import type { Motorcycle } from '../types';
 
 const sampleMotos: Motorcycle[] = [
@@ -208,4 +214,47 @@ test('Zod validation enforces required fields, slug pattern and cover framing', 
     coverPosition: 'center top',
   });
   assert.equal(invalidCoverPos.success, false);
+
+  const validSiteSettings = siteSettingsSchema.safeParse({
+    companyName: 'Palazzo Motos',
+    whatsappNumber: '5551999422491',
+    defaultTheme: 'light',
+    heroHeadline: 'Sua *Próxima* Aventura!',
+    heroShadowColor: '#080909',
+    heroShadowOpacity: 75,
+    heroShadowDirection: 'right',
+    heroShadowReach: 65,
+    heroHighlightBold: true,
+    heroHighlightItalic: true,
+    heroHighlightBgEnabled: true,
+    heroHighlightBgColor: '#B7F21B',
+  });
+  assert.equal(validSiteSettings.success, true);
+});
+
+test('headlineParser preserves casing and heroShadowGradient respects direction, reach, opacity and color', () => {
+  const parsed = parseHeadlineSegments('Sua *Próxima* aventura começa *AQUI*!');
+  assert.deepEqual(parsed, [
+    { text: 'Sua ', emphasized: false },
+    { text: 'Próxima', emphasized: true },
+    { text: ' aventura começa ', emphasized: false },
+    { text: 'AQUI', emphasized: true },
+    { text: '!', emphasized: false },
+  ]);
+
+  assert.equal(buildHeroShadowGradient({ enabled: false }), undefined);
+  const rightGrad = buildHeroShadowGradient({
+    enabled: true,
+    color: '#112233',
+    opacity: 60,
+    direction: 'right',
+    reach: 80,
+  });
+  assert.ok(rightGrad?.startsWith('linear-gradient(to left, rgba(17, 34, 51, 0.6)'));
+  assert.ok(rightGrad?.includes('80%)'));
+
+  assert.equal(isLightColor('#FFFFFF'), true);
+  assert.equal(isLightColor('#080909'), false);
+  assert.equal(getContrastInk('#B7F21B'), '#101010');
+  assert.equal(getContrastInk('#080909'), '#F3F3F3');
 });

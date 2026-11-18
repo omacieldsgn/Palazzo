@@ -24,8 +24,8 @@ export function WhatsAppButton({
     variant === 'primary'
       ? 'bg-[#B7F21B] text-[#101010] hover:bg-[#D0FF36] active:bg-[#8AB90B]'
       : variant === 'outline'
-        ? 'border border-[#B7F21B] text-[#B7F21B] bg-transparent hover:bg-[#B7F21B]/10'
-        : 'border border-[#303434] bg-[#1C1F1F] text-[#F3F3F3] hover:bg-[#252727] hover:border-[#505555]';
+        ? 'border border-[#4A6800] dark:border-[#B7F21B] text-accent-ink bg-transparent hover:bg-[#B7F21B]/10'
+        : 'border border-line bg-card-elevated text-ink hover:bg-card-hover hover:border-line-strong';
 
   const sizeClasses =
     size === 'sm'

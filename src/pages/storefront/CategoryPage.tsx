@@ -37,31 +37,31 @@ export function CategoryPage() {
   }, [motorcycles, category, sortBy, categories]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#080909] text-[#F3F3F3]">
+    <div className="min-h-screen flex flex-col bg-canvas text-ink">
       <Header settings={settings} />
 
       <main className="flex-1 py-12 sm:py-16">
         <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
           <Link
             to="/motos"
-            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#858989] hover:text-[#B7F21B] transition-colors mb-6"
+            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-ink-secondary hover:text-accent-ink transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Voltar ao estoque completo</span>
           </Link>
 
-          <div className="pb-8 border-b border-[#242727] mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div className="pb-8 border-b border-line-subtle mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#B7F21B]">
+              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-ink">
                 {isOpportunityCategory(category)
                   ? 'Oportunidades de Showroom · Estoque Limitado'
                   : 'Categoria'}
               </span>
-              <h1 className="font-display text-3xl sm:text-5xl font-extrabold uppercase tracking-tight text-[#F3F3F3] mt-1">
+              <h1 className="font-display text-3xl sm:text-5xl font-extrabold uppercase tracking-tight text-ink mt-1">
                 {category ? category.name : 'Categoria não encontrada'}
               </h1>
               {category?.description && (
-                <p className="text-sm sm:text-base text-[#858989] mt-2 max-w-2xl">
+                <p className="text-sm sm:text-base text-ink-secondary mt-2 max-w-2xl">
                   {category.description}
                 </p>
               )}
@@ -71,7 +71,7 @@ export function CategoryPage() {
               aria-label="Ordenar motocicletas da categoria"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="h-11 px-3.5 rounded-lg bg-[#141515] border border-[#303434] text-sm text-[#F3F3F3] focus:outline-none focus:border-[#B7F21B] shrink-0"
+              className="h-11 px-3.5 rounded-lg bg-card border border-line text-sm text-ink focus:outline-none focus:border-[#B7F21B] shrink-0"
             >
               <option value="recent">Mais recentes</option>
               <option value="price_asc">Menor preço</option>
@@ -90,7 +90,7 @@ export function CategoryPage() {
                 className={`px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider border transition-colors ${
                   cat.slug === slug
                     ? 'bg-[#B7F21B] border-[#B7F21B] text-[#101010]'
-                    : 'bg-[#141515] border-[#242727] text-[#858989] hover:text-[#F3F3F3] hover:border-[#303434]'
+                    : 'bg-card border-line-subtle text-ink-secondary hover:text-ink hover:border-line'
                 }`}
               >
                 {cat.name}

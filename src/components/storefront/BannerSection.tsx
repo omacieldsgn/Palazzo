@@ -11,16 +11,19 @@ export function BannerSection({ banners }: BannerSectionProps) {
   if (!banners || banners.length === 0) return null;
 
   return (
-    <section className="py-10 sm:py-14 bg-[#080909] border-b border-[#242727]">
+    <section className="py-10 sm:py-14 bg-canvas border-b border-line-subtle">
       <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         {banners.map((banner) => {
           const isExternal = banner.ctaUrl?.startsWith('http');
+          const hasImage = Boolean(banner.imageDesktop || banner.imageMobile);
           return (
             <div
               key={banner.id}
-              className="relative overflow-hidden rounded-2xl border border-[#303434] bg-[#141515] min-h-[240px] sm:min-h-[280px] flex items-center"
+              className={`relative overflow-hidden rounded-2xl border border-line min-h-[240px] sm:min-h-[280px] flex items-center ${
+                hasImage ? 'bg-[#141515]' : 'bg-card'
+              }`}
             >
-              {(banner.imageDesktop || banner.imageMobile) && (
+              {hasImage && (
                 <div className="absolute inset-0 pointer-events-none">
                   <div className="hidden md:block w-full h-full">
                     <ResilientImage
@@ -41,11 +44,19 @@ export function BannerSection({ banners }: BannerSectionProps) {
               )}
 
               <div className="relative p-6 sm:p-10 lg:p-12 max-w-2xl">
-                <h2 className="font-display text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-[#F3F3F3]">
+                <h2
+                  className={`font-display text-2xl sm:text-4xl font-extrabold uppercase tracking-tight ${
+                    hasImage ? 'text-[#F3F3F3]' : 'text-ink'
+                  }`}
+                >
                   {banner.title}
                 </h2>
                 {banner.subtitle && (
-                  <p className="mt-3 text-sm sm:text-base text-[#F3F3F3]/80 leading-relaxed">
+                  <p
+                    className={`mt-3 text-sm sm:text-base leading-relaxed ${
+                      hasImage ? 'text-[#F3F3F3]/85' : 'text-ink-secondary'
+                    }`}
+                  >
                     {banner.subtitle}
                   </p>
                 )}

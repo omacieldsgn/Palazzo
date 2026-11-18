@@ -32,14 +32,14 @@ export function ConfirmDialog({
       aria-modal="true"
       aria-labelledby="confirm-dialog-title"
     >
-      <div className="w-full max-w-md bg-[#141515] border border-[#303434] rounded-[14px] p-6 shadow-2xl">
+      <div className="w-full max-w-md bg-card border border-line rounded-[14px] p-6 shadow-2xl">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3">
             <div
               className={`p-2 rounded-lg shrink-0 ${
                 variant === 'danger'
-                  ? 'bg-[#F15B5B]/15 text-[#F15B5B]'
-                  : 'bg-[#B7F21B]/15 text-[#B7F21B]'
+                  ? 'bg-[#F15B5B]/15 text-[#D93838] dark:text-[#F15B5B]'
+                  : 'bg-[#B7F21B]/15 text-accent-ink'
               }`}
             >
               <AlertTriangle className="w-5 h-5" aria-hidden="true" />
@@ -47,18 +47,18 @@ export function ConfirmDialog({
             <div>
               <h2
                 id="confirm-dialog-title"
-                className="font-display text-lg font-bold text-[#F3F3F3] leading-snug"
+                className="font-display text-lg font-bold text-ink leading-snug"
               >
                 {title}
               </h2>
-              <p className="text-sm text-[#858989] mt-2 leading-relaxed">{description}</p>
+              <p className="text-sm text-ink-secondary mt-2 leading-relaxed">{description}</p>
             </div>
           </div>
           <button
             type="button"
             onClick={onCancel}
             aria-label="Fechar caixa de confirmação"
-            className="p-1.5 text-[#858989] hover:text-[#F3F3F3] rounded-lg transition-colors"
+            className="p-1.5 text-ink-secondary hover:text-ink rounded-lg transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -69,7 +69,7 @@ export function ConfirmDialog({
             type="button"
             onClick={onCancel}
             disabled={loading}
-            className="px-4 py-2 rounded-lg border border-[#303434] bg-[#1C1F1F] text-sm font-medium text-[#F3F3F3] hover:bg-[#252727] transition-colors disabled:opacity-50"
+            className="px-4 py-2 rounded-lg border border-line bg-card-elevated text-sm font-medium text-ink hover:bg-card-hover transition-colors disabled:opacity-50"
           >
             {cancelLabel}
           </button>

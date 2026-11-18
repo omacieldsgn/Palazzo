@@ -610,11 +610,22 @@ export async function saveSiteSettings(settings: SiteSettings): Promise<void> {
     email: settings.email?.trim(),
     address: settings.address?.trim(),
     openingHours: settings.openingHours?.trim(),
+    defaultTheme: settings.defaultTheme || 'dark',
     heroHeadline: settings.heroHeadline.trim(),
     heroSubheadline: settings.heroSubheadline?.trim(),
     heroImageDesktop: settings.heroImageDesktop?.trim(),
     heroImageMobile: settings.heroImageMobile?.trim(),
     heroOverlayShadow: settings.heroOverlayShadow ?? true,
+    heroShadowColor: settings.heroShadowColor?.trim() || '#080909',
+    heroShadowOpacity:
+      typeof settings.heroShadowOpacity === 'number' ? settings.heroShadowOpacity : 85,
+    heroShadowDirection: settings.heroShadowDirection || 'left',
+    heroShadowReach:
+      typeof settings.heroShadowReach === 'number' ? settings.heroShadowReach : 70,
+    heroHighlightBold: settings.heroHighlightBold ?? true,
+    heroHighlightItalic: settings.heroHighlightItalic ?? false,
+    heroHighlightBgEnabled: settings.heroHighlightBgEnabled ?? false,
+    heroHighlightBgColor: settings.heroHighlightBgColor?.trim() || '#B7F21B',
     heroImagePosition: settings.heroImagePosition?.trim() || '50% 50%',
     heroImageFit: settings.heroImageFit || 'cover',
     heroMobileImagePosition:

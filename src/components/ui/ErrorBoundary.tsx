@@ -29,13 +29,13 @@ export class ErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-[#080909] text-[#F3F3F3] flex items-center justify-center p-6">
-          <div className="max-w-md w-full bg-[#141515] border border-[#303434] rounded-xl p-8 text-center">
+        <div className="min-h-screen bg-canvas text-ink flex items-center justify-center p-6">
+          <div className="max-w-md w-full bg-card border border-line rounded-xl p-8 text-center">
             <AlertTriangle className="w-10 h-10 text-[#F15B5B] mx-auto mb-4" aria-hidden="true" />
             <h1 className="font-display text-xl font-bold uppercase tracking-tight mb-2">
               Algo saiu do esperado
             </h1>
-            <p className="text-sm text-[#858989] mb-6 leading-relaxed">
+            <p className="text-sm text-ink-secondary mb-6 leading-relaxed">
               Não foi possível carregar esta visualização. Tente recarregar a página.
             </p>
             <button

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { ToastProvider } from './context/ToastContext';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import { scrollToSection } from './lib/scroll';
@@ -53,7 +54,7 @@ function RequireAdmin({ children }: { children: React.ReactNode }) {
 
   if (!authReady) {
     return (
-      <div className="min-h-screen bg-[#080909] text-[#858989] flex items-center justify-center text-sm">
+      <div className="dark min-h-screen bg-[#080909] text-[#858989] flex items-center justify-center text-sm">
         Verificando sessão administrativa...
       </div>
     );
@@ -69,10 +70,11 @@ function RequireAdmin({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <ToastProvider>
-          <BrowserRouter>
-            <ScrollManager />
+      <ThemeProvider>
+        <AuthProvider>
+          <ToastProvider>
+            <BrowserRouter>
+              <ScrollManager />
             <Routes>
               {/* Public Storefront Routes */}
               <Route path="/" element={<HomePage />} />
@@ -155,6 +157,7 @@ export default function App() {
           </BrowserRouter>
         </ToastProvider>
       </AuthProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

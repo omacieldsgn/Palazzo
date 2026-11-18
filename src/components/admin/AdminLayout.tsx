@@ -130,7 +130,7 @@ export function AdminLayout({ title, subtitle, actions, children }: AdminLayoutP
   );
 
   return (
-    <div className="min-h-screen bg-[#080909] text-[#F3F3F3] flex">
+    <div className="dark min-h-screen bg-[#080909] text-[#F3F3F3] flex">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:block w-[260px] shrink-0 sticky top-0 h-screen">
         {sidebarContent}

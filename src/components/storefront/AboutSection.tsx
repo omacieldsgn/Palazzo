@@ -27,36 +27,36 @@ export function AboutSection({ settings }: AboutSectionProps) {
   return (
     <section
       id="sobre"
-      className="py-16 sm:py-20 bg-[#0D0F0F] border-b border-[#242727]"
+      className="py-12 sm:py-20 bg-canvas-alt border-b border-line-subtle"
     >
       <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 items-start">
           <div className="lg:col-span-5">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#B7F21B]">
+            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-ink">
               Sobre a Palazzo Motos
             </span>
-            <h2 className="font-display text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-[#F3F3F3] mt-2 leading-tight">
+            <h2 className="font-display text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-ink mt-2 leading-tight">
               {settings.aboutTitle || 'ENGENHARIA, PROCEDÊNCIA E ATITUDE.'}
             </h2>
-            <p className="mt-4 text-sm sm:text-base text-[#858989] leading-relaxed">
+            <p className="mt-4 text-sm sm:text-base text-ink-secondary leading-relaxed">
               {settings.aboutText}
             </p>
 
-            <div className="mt-8 pt-6 border-t border-[#242727] space-y-3 text-sm text-[#F3F3F3]/85">
+            <div className="mt-8 pt-6 border-t border-line-subtle space-y-3 text-sm text-ink/85">
               {settings.address && (
                 <div className="flex items-start gap-3">
-                  <MapPin className="w-4 h-4 text-[#B7F21B] shrink-0 mt-1" aria-hidden="true" />
+                  <MapPin className="w-4 h-4 text-accent-ink shrink-0 mt-1" aria-hidden="true" />
                   <span>{settings.address}</span>
                 </div>
               )}
               {settings.openingHours && (
                 <div className="flex items-start gap-3">
-                  <Clock className="w-4 h-4 text-[#B7F21B] shrink-0 mt-1" aria-hidden="true" />
+                  <Clock className="w-4 h-4 text-accent-ink shrink-0 mt-1" aria-hidden="true" />
                   <span>{settings.openingHours}</span>
                 </div>
               )}
               <div className="flex items-start gap-3">
-                <ShieldCheck className="w-4 h-4 text-[#B7F21B] shrink-0 mt-1" aria-hidden="true" />
+                <ShieldCheck className="w-4 h-4 text-accent-ink shrink-0 mt-1" aria-hidden="true" />
                 <span>Garantia de procedência em todas as negociações</span>
               </div>
             </div>
@@ -66,21 +66,21 @@ export function AboutSection({ settings }: AboutSectionProps) {
             {pillars.map((pillar) => (
               <div
                 key={pillar.number}
-                className="bg-[#141515] border border-[#242727] rounded-xl p-6 flex flex-col justify-between"
+                className="bg-card border border-line-subtle rounded-xl p-5 sm:p-6 flex flex-col justify-between shadow-xs dark:shadow-none"
               >
                 <div>
-                  <span className="font-mono-tabular text-sm font-semibold text-[#B7F21B]">
+                  <span className="font-mono-tabular text-sm font-semibold text-accent-ink">
                     {pillar.number}
                   </span>
-                  <h3 className="font-display text-lg font-bold text-[#F3F3F3] mt-3 leading-snug">
+                  <h3 className="font-display text-lg font-bold text-ink mt-3 leading-snug">
                     {pillar.title}
                   </h3>
-                  <p className="text-sm text-[#858989] mt-2.5 leading-relaxed">
+                  <p className="text-sm text-ink-secondary mt-2.5 leading-relaxed">
                     {pillar.text}
                   </p>
                 </div>
-                <div className="mt-6 pt-4 border-t border-[#242727] flex items-center gap-2 text-xs font-medium text-[#F3F3F3]/80">
-                  <CheckCircle2 className="w-4 h-4 text-[#B7F21B] shrink-0" aria-hidden="true" />
+                <div className="mt-6 pt-4 border-t border-line-subtle flex items-center gap-2 text-xs font-medium text-ink/80">
+                  <CheckCircle2 className="w-4 h-4 text-accent-ink shrink-0" aria-hidden="true" />
                   <span>Padrão Palazzo</span>
                 </div>
               </div>

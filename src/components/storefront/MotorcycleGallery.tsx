@@ -78,7 +78,7 @@ export function MotorcycleGallery({
     <div className="space-y-3">
       {/* Main Viewport */}
       <div
-        className="relative aspect-[4/3] bg-[#0D0F0F] border border-[#242727] rounded-xl overflow-hidden group select-none"
+        className="relative aspect-[4/3] bg-canvas-alt border border-line-subtle rounded-xl overflow-hidden group select-none"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -98,7 +98,7 @@ export function MotorcycleGallery({
           }}
         />
 
-        {/* Click overlay for zoom/lightbox */}
+        {/* Click overlay for zoom/lightbox (kept dark frosted over image) */}
         <button
           type="button"
           onClick={() => setLightboxOpen(true)}
@@ -146,7 +146,7 @@ export function MotorcycleGallery({
               className={`relative w-20 sm:w-24 aspect-[4/3] rounded-lg overflow-hidden border shrink-0 transition-all ${
                 idx === activeIndex
                   ? 'border-[#B7F21B] ring-1 ring-[#B7F21B]'
-                  : 'border-[#242727] opacity-70 hover:opacity-100'
+                  : 'border-line-subtle opacity-75 hover:opacity-100'
               }`}
             >
               <ResilientImage
