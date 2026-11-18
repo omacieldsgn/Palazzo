@@ -53,7 +53,22 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   updatedAt: nowIso,
 };
 
+export const OPPORTUNITY_CATEGORY_ID = 'cat-ofertas-imperdiveis';
+export const OPPORTUNITY_CATEGORY_SLUG = 'ofertas-imperdiveis';
+
+export const OPPORTUNITY_CATEGORY_DEFAULT: Category = {
+  id: OPPORTUNITY_CATEGORY_ID,
+  name: 'Ofertas Imperdíveis',
+  slug: OPPORTUNITY_CATEGORY_SLUG,
+  description: 'Unidades selecionadas com preços imperdíveis e condições imediatas.',
+  sortOrder: 0,
+  active: true,
+  createdAt: nowIso,
+  updatedAt: nowIso,
+};
+
 export const DEFAULT_CATEGORIES: Category[] = [
+  OPPORTUNITY_CATEGORY_DEFAULT,
   {
     id: 'cat-street',
     name: 'Street',

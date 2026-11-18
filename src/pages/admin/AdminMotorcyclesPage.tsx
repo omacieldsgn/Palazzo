@@ -221,7 +221,10 @@ export function AdminMotorcyclesPage() {
                             <ResilientImage
                               src={getMotorcycleCoverImage(moto)}
                               alt={moto.name}
-                              className="w-full h-full object-cover"
+                              className={`w-full h-full ${
+                                moto.coverFit === 'contain' ? 'object-contain p-0.5' : 'object-cover'
+                              }`}
+                              style={{ objectPosition: moto.coverPosition || '50% 50%' }}
                             />
                           </div>
                           <div className="min-w-0">

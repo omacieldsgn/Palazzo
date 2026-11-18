@@ -5,7 +5,11 @@ import { Header } from '../../components/storefront/Header';
 import { Footer } from '../../components/storefront/Footer';
 import { MotorcycleCard } from '../../components/storefront/MotorcycleCard';
 import { EmptyState, ErrorState, LoadingState } from '../../components/ui/States';
-import { filterMotorcycles, sortMotorcycles } from '../../lib/catalog';
+import {
+  filterMotorcycles,
+  isOpportunityCategory,
+  sortMotorcycles,
+} from '../../lib/catalog';
 import { useStorefrontData } from '../../hooks/useStorefrontData';
 import type { SortOption } from '../../types';
 
@@ -29,8 +33,8 @@ export function CategoryPage() {
   const items = useMemo(() => {
     if (!category) return [];
     const filtered = filterMotorcycles(motorcycles, { categoryId: category.id });
-    return sortMotorcycles(filtered, sortBy);
-  }, [motorcycles, category, sortBy]);
+    return sortMotorcycles(filtered, sortBy, categories);
+  }, [motorcycles, category, sortBy, categories]);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#080909] text-[#F3F3F3]">
@@ -49,7 +53,9 @@ export function CategoryPage() {
           <div className="pb-8 border-b border-[#242727] mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
               <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#B7F21B]">
-                Categoria
+                {isOpportunityCategory(category)
+                  ? 'Oportunidades de Showroom · Estoque Limitado'
+                  : 'Categoria'}
               </span>
               <h1 className="font-display text-3xl sm:text-5xl font-extrabold uppercase tracking-tight text-[#F3F3F3] mt-1">
                 {category ? category.name : 'Categoria não encontrada'}
@@ -109,6 +115,7 @@ export function CategoryPage() {
                   key={moto.id}
                   motorcycle={moto}
                   whatsappNumber={settings.whatsappNumber}
+                  categories={categories}
                 />
               ))}
             </div>

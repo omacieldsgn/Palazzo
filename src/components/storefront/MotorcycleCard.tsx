@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, MessageCircle } from 'lucide-react';
-import type { Motorcycle } from '../../types';
+import type { Category, Motorcycle } from '../../types';
+import { isOpportunityMotorcycle } from '../../lib/catalog';
 import {
   buildMotorcycleWhatsAppMessage,
   buildWhatsAppUrl,
@@ -15,14 +16,23 @@ import { ResilientImage } from '../ui/ResilientImage';
 interface MotorcycleCardProps {
   motorcycle: Motorcycle;
   whatsappNumber: string;
+  categories?: Category[];
 }
 
-export function MotorcycleCard({ motorcycle, whatsappNumber }: MotorcycleCardProps) {
+export function MotorcycleCard({
+  motorcycle,
+  whatsappNumber,
+  categories,
+}: MotorcycleCardProps) {
   const coverImg = getMotorcycleCoverImage(motorcycle);
   const hasPromo =
     motorcycle.oldPrice !== null &&
     motorcycle.oldPrice !== undefined &&
     motorcycle.oldPrice > motorcycle.price;
+
+  const isOpportunity = isOpportunityMotorcycle(motorcycle, categories);
+  const coverFit = motorcycle.coverFit || 'cover';
+  const coverPosition = motorcycle.coverPosition || '50% 50%';
 
   const whatsappHref = buildWhatsAppUrl(
     whatsappNumber,
@@ -34,7 +44,9 @@ export function MotorcycleCard({ motorcycle, whatsappNumber }: MotorcycleCardPro
       ? 'RESERVADA'
       : motorcycle.status === 'sold'
         ? 'VENDIDA'
-        : motorcycle.badge || (motorcycle.isDemo ? 'DEMO' : null);
+        : isOpportunity
+          ? motorcycle.badge || 'ÚLTIMA UNIDADE · OFERTA'
+          : motorcycle.badge || (motorcycle.isDemo ? 'DEMO' : null);
 
   return (
     <article className="group bg-[#141515] border border-[#242727] hover:border-[#303434] rounded-xl overflow-hidden flex flex-col transition-transform duration-200 hover:-translate-y-0.5">
@@ -47,10 +59,13 @@ export function MotorcycleCard({ motorcycle, whatsappNumber }: MotorcycleCardPro
           src={coverImg}
           alt={`${motorcycle.brand} ${motorcycle.model} ${motorcycle.yearModel}`}
           fallbackLabel={motorcycle.name}
-          className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.03]"
+          className={`w-full h-full transition-transform duration-300 group-hover:scale-[1.03] ${
+            coverFit === 'contain' ? 'object-contain p-2' : 'object-cover'
+          }`}
+          style={{ objectPosition: coverPosition }}
         />
 
-        {/* Subtle Top-Right Tag (Max 1 tag, never badge sandwiches) */}
+        {/* Subtle Top-Left Tag (Max 1 tag, never badge sandwiches) */}
         {statusTag && (
           <span
             className={`absolute top-3 left-3 px-2.5 py-1 rounded text-[11px] font-bold uppercase tracking-wider ${
@@ -58,7 +73,9 @@ export function MotorcycleCard({ motorcycle, whatsappNumber }: MotorcycleCardPro
                 ? 'bg-[#F15B5B] text-white'
                 : motorcycle.status === 'reserved'
                   ? 'bg-[#F3B43C] text-[#101010]'
-                  : 'bg-[#080909]/85 border border-[#B7F21B]/60 text-[#B7F21B] backdrop-blur-sm'
+                  : isOpportunity
+                    ? 'bg-[#B7F21B] text-[#101010] shadow-sm'
+                    : 'bg-[#080909]/85 border border-[#B7F21B]/60 text-[#B7F21B] backdrop-blur-sm'
             }`}
           >
             {statusTag}

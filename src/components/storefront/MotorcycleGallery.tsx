@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, Maximize2, X, ZoomIn, ZoomOut } from 'lucide-react';
-import type { MotorcycleImage } from '../../types';
+import type { CoverFit, MotorcycleImage } from '../../types';
 import { ResilientImage } from '../ui/ResilientImage';
 
 interface MotorcycleGalleryProps {
   images: MotorcycleImage[];
   motorcycleName: string;
+  coverPosition?: string;
+  coverFit?: CoverFit;
 }
 
-export function MotorcycleGallery({ images, motorcycleName }: MotorcycleGalleryProps) {
+export function MotorcycleGallery({
+  images,
+  motorcycleName,
+  coverPosition = '50% 50%',
+  coverFit = 'cover',
+}: MotorcycleGalleryProps) {
   const ordered = [...images].sort((a, b) => {
     if (a.isCover !== b.isCover) return a.isCover ? -1 : 1;
     return a.sortOrder - b.sortOrder;
@@ -80,9 +87,15 @@ export function MotorcycleGallery({ images, motorcycleName }: MotorcycleGalleryP
           alt={current?.altText || motorcycleName}
           fallbackLabel={motorcycleName}
           loading="eager"
-          className={`w-full h-full object-cover object-center transition-transform duration-300 ${
-            zoomed ? 'scale-125 cursor-zoom-out' : 'cursor-zoom-in'
-          }`}
+          className={`w-full h-full transition-transform duration-300 ${
+            (current?.isCover || activeIndex === 0) && coverFit === 'contain'
+              ? 'object-contain p-3'
+              : 'object-cover'
+          } ${zoomed ? 'scale-125 cursor-zoom-out' : 'cursor-zoom-in'}`}
+          style={{
+            objectPosition:
+              current?.isCover || activeIndex === 0 ? coverPosition : '50% 50%',
+          }}
         />
 
         {/* Click overlay for zoom/lightbox */}

@@ -7,7 +7,7 @@ import { MotorcycleGallery } from '../../components/storefront/MotorcycleGallery
 import { MotorcycleCard } from '../../components/storefront/MotorcycleCard';
 import { WhatsAppButton } from '../../components/ui/WhatsAppButton';
 import { EmptyState, LoadingState } from '../../components/ui/States';
-import { getRelatedMotorcycles } from '../../lib/catalog';
+import { getRelatedMotorcycles, isOpportunityMotorcycle } from '../../lib/catalog';
 import {
   buildMotorcycleWhatsAppMessage,
   formatEngineCc,
@@ -104,6 +104,12 @@ export function MotorcycleDetailPage() {
     motorcycle.oldPrice !== null &&
     motorcycle.oldPrice !== undefined &&
     motorcycle.oldPrice > motorcycle.price;
+  const isOpportunity = isOpportunityMotorcycle(motorcycle, categories);
+  const displayBadge =
+    motorcycle.badge ||
+    (isOpportunity && motorcycle.status === 'available'
+      ? 'ÚLTIMA UNIDADE · OFERTA'
+      : undefined);
 
   const specs = [
     { label: 'Marca', value: motorcycle.brand },
@@ -169,6 +175,8 @@ export function MotorcycleDetailPage() {
               <MotorcycleGallery
                 images={galleryImages}
                 motorcycleName={motorcycle.name}
+                coverPosition={motorcycle.coverPosition}
+                coverFit={motorcycle.coverFit}
               />
 
               {/* Description */}
@@ -261,9 +269,15 @@ export function MotorcycleDetailPage() {
                     {motorcycle.name}
                   </h1>
 
-                  {motorcycle.badge && (
-                    <p className="mt-2 inline-block px-2.5 py-1 rounded bg-[#B7F21B]/12 text-[#B7F21B] text-xs font-bold uppercase tracking-wider">
-                      {motorcycle.badge}
+                  {displayBadge && (
+                    <p
+                      className={`mt-2 inline-block px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wider ${
+                        isOpportunity && motorcycle.status === 'available'
+                          ? 'bg-[#B7F21B] text-[#101010]'
+                          : 'bg-[#B7F21B]/12 text-[#B7F21B]'
+                      }`}
+                    >
+                      {displayBadge}
                     </p>
                   )}
                 </div>
@@ -277,14 +291,15 @@ export function MotorcycleDetailPage() {
                   )}
                   <p
                     className={`font-display text-3xl sm:text-4xl font-extrabold font-mono-tabular tracking-tight mt-0.5 ${
-                      hasPromo ? 'text-[#B7F21B]' : 'text-[#F3F3F3]'
+                      hasPromo || isOpportunity ? 'text-[#B7F21B]' : 'text-[#F3F3F3]'
                     }`}
                   >
                     {formatPriceBRL(motorcycle.price)}
                   </p>
-                  {motorcycle.promoText && (
+                  {(motorcycle.promoText || (isOpportunity && motorcycle.status === 'available')) && (
                     <p className="text-xs font-semibold text-[#B7F21B] mt-1.5">
-                      {motorcycle.promoText}
+                      {motorcycle.promoText ||
+                        'Condição imperdível por tempo limitado — unidade sujeita à venda imediata.'}
                     </p>
                   )}
                 </div>
@@ -384,6 +399,7 @@ export function MotorcycleDetailPage() {
                     key={item.id}
                     motorcycle={item}
                     whatsappNumber={settings.whatsappNumber}
+                    categories={categories}
                   />
                 ))}
               </div>

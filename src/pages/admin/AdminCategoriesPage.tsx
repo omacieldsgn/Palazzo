@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowUp, Edit, Plus, Save, Trash2, X } from 'lucide-react';
 import { AdminLayout } from '../../components/admin/AdminLayout';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { useToast } from '../../context/ToastContext';
+import { isOpportunityCategory } from '../../lib/catalog';
 import { generateSlug } from '../../lib/formatters';
 import { categorySchema } from '../../lib/validations';
 import {
   deleteCategorySafe,
+  ensureOpportunityCategoryExists,
   saveCategory,
   subscribeAdminCategories,
   subscribeAdminMotorcycles,
@@ -27,6 +29,7 @@ export function AdminCategoriesPage() {
   const [saving, setSaving] = useState(false);
 
   const [deleteTarget, setDeleteTarget] = useState<Category | null>(null);
+  const ensuredOpportunityRef = useRef(false);
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -34,6 +37,10 @@ export function AdminCategoriesPage() {
     const unsubCats = subscribeAdminCategories((list) => {
       setCategories(list);
       setLoading(false);
+      if (!ensuredOpportunityRef.current && !list.some((c) => isOpportunityCategory(c))) {
+        ensuredOpportunityRef.current = true;
+        void ensureOpportunityCategoryExists();
+      }
     });
     const unsubMotos = subscribeAdminMotorcycles(setMotorcycles);
     return () => {
@@ -243,13 +250,18 @@ export function AdminCategoriesPage() {
                     className="px-5 py-4 flex items-center justify-between gap-4 hover:bg-[#1C1F1F]/50"
                   >
                     <div className="min-w-0">
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className="font-display font-bold text-[#F3F3F3]">
                           {cat.name}
                         </span>
                         <span className="text-xs font-mono-tabular text-[#858989]">
                           /{cat.slug} · {count} moto(s)
                         </span>
+                        {isOpportunityCategory(cat) && (
+                          <span className="text-[11px] font-bold uppercase tracking-wider text-[#B7F21B]">
+                            · Estratégica (Home + Topo do Estoque)
+                          </span>
+                        )}
                       </div>
                       {cat.description && (
                         <p className="text-xs text-[#858989] mt-1 truncate">{cat.description}</p>

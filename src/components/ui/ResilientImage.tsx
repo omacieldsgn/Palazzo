@@ -5,6 +5,7 @@ interface ResilientImageProps {
   src?: string | null;
   alt: string;
   className?: string;
+  style?: React.CSSProperties;
   fallbackLabel?: string;
   loading?: 'lazy' | 'eager';
 }
@@ -13,6 +14,7 @@ export function ResilientImage({
   src,
   alt,
   className = 'w-full h-full object-cover',
+  style,
   fallbackLabel,
   loading = 'lazy',
 }: ResilientImageProps) {
@@ -47,6 +49,7 @@ export function ResilientImage({
       referrerPolicy="no-referrer"
       onError={() => setFailed(true)}
       className={className}
+      style={style}
     />
   );
 }

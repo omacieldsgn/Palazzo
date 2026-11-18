@@ -13,6 +13,7 @@ import {
   extractCatalogFacets,
   filterMotorcycles,
   getRelatedMotorcycles,
+  isOpportunityMotorcycle,
   paginateItems,
   sortMotorcycles,
 } from './catalog';
@@ -112,7 +113,7 @@ test('filterMotorcycles filters by search, category, brand, cc, price and condit
   assert.equal(filterMotorcycles(sampleMotos, { ccMin: 1000 }).length, 2);
 });
 
-test('sortMotorcycles orders by price, mileage, year and sortOrder', () => {
+test('sortMotorcycles orders by price, mileage, year and prioritizes opportunity bikes', () => {
   const byPriceAsc = sortMotorcycles(sampleMotos, 'price_asc');
   assert.equal(byPriceAsc[0].id, 'm2');
   const byPriceDesc = sortMotorcycles(sampleMotos, 'price_desc');
@@ -121,6 +122,26 @@ test('sortMotorcycles orders by price, mileage, year and sortOrder', () => {
   assert.equal(byYearDesc[0].id, 'm2');
   const byMileageAsc = sortMotorcycles(sampleMotos, 'mileage_asc');
   assert.equal(byMileageAsc[0].id, 'm2');
+
+  const oppMoto: Motorcycle = {
+    ...sampleMotos[2],
+    id: 'm-opp',
+    categoryId: 'cat-ofertas-imperdiveis',
+    categoryName: 'Ofertas Imperdíveis',
+    sortOrder: 99,
+  };
+  const soldOppMoto: Motorcycle = {
+    ...oppMoto,
+    id: 'm-opp-sold',
+    status: 'sold',
+    sortOrder: 0,
+  };
+  assert.equal(isOpportunityMotorcycle(oppMoto), true);
+  assert.equal(isOpportunityMotorcycle(sampleMotos[0]), false);
+
+  const sortedRecent = sortMotorcycles([...sampleMotos, soldOppMoto, oppMoto], 'recent');
+  assert.equal(sortedRecent[0].id, 'm-opp');
+  assert.notEqual(sortedRecent[1].id, 'm-opp-sold');
 });
 
 test('paginateItems clamps page boundaries cleanly', () => {
@@ -146,7 +167,7 @@ test('extractCatalogFacets extracts sorted brands and years', () => {
   assert.equal(facets.maxPrice, 165000);
 });
 
-test('Zod validation enforces required fields and slug pattern', () => {
+test('Zod validation enforces required fields, slug pattern and cover framing', () => {
   const badCategory = categorySchema.safeParse({
     name: 'A',
     slug: 'Invalid Slug!',
@@ -167,6 +188,24 @@ test('Zod validation enforces required fields and slug pattern', () => {
     featured: true,
     published: true,
     sortOrder: 1,
+    coverPosition: '50% 35%',
+    coverFit: 'contain',
   });
   assert.equal(validMoto.success, true);
+
+  const invalidCoverPos = motorcycleFormSchema.safeParse({
+    name: 'Yamaha MT-09',
+    slug: 'yamaha-mt-09-2025',
+    brand: 'Yamaha',
+    model: 'MT-09',
+    categoryId: 'cat-naked',
+    yearModel: 2025,
+    price: 62990,
+    status: 'available',
+    featured: true,
+    published: true,
+    sortOrder: 1,
+    coverPosition: 'center top',
+  });
+  assert.equal(invalidCoverPos.success, false);
 });

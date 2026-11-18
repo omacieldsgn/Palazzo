@@ -1,5 +1,6 @@
 export type MotorcycleStatus = 'available' | 'reserved' | 'sold' | 'hidden';
 export type MotorcycleCondition = 'new' | 'used';
+export type CoverFit = 'cover' | 'contain';
 
 export interface MotorcycleImage {
   id: string;
@@ -43,6 +44,8 @@ export interface Motorcycle {
   sortOrder: number;
   isDemo?: boolean;
   coverImage?: string;
+  coverPosition?: string;
+  coverFit?: CoverFit;
   images?: MotorcycleImage[];
   createdAt: string;
   updatedAt: string;

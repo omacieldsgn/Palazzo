@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Layers } from 'lucide-react';
+import { ArrowUpRight, Flame, Layers } from 'lucide-react';
+import { isOpportunityCategory } from '../../lib/catalog';
 import type { Category } from '../../types';
 
 interface CategorySectionProps {
@@ -43,7 +44,7 @@ export function CategorySection({
         </div>
 
         {/* Interactive Category Segmented Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           <button
             type="button"
             onClick={() => onSelectCategory('all')}
@@ -76,6 +77,7 @@ export function CategorySection({
 
           {categories.map((cat) => {
             const active = selectedCategoryId === cat.id;
+            const isOpportunity = isOpportunityCategory(cat);
             const count = countsByCategory[cat.id] || 0;
             return (
               <button
@@ -86,16 +88,36 @@ export function CategorySection({
                 className={`group text-left p-4 rounded-xl border transition-all min-h-[88px] flex flex-col justify-between ${
                   active
                     ? 'bg-[#B7F21B] border-[#B7F21B] text-[#101010]'
-                    : 'bg-[#141515] border-[#242727] text-[#F3F3F3] hover:border-[#505555] hover:bg-[#1C1F1F]'
+                    : isOpportunity
+                      ? 'bg-[#141515] border-[#B7F21B]/50 text-[#F3F3F3] hover:border-[#B7F21B] hover:bg-[#1C1F1F]'
+                      : 'bg-[#141515] border-[#242727] text-[#F3F3F3] hover:border-[#505555] hover:bg-[#1C1F1F]'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span
-                    className={`w-2 h-2 rounded-xs ${
-                      active ? 'bg-[#101010]' : 'bg-[#B7F21B]'
-                    }`}
-                    aria-hidden="true"
-                  />
+                  {isOpportunity ? (
+                    <span className="inline-flex items-center gap-1">
+                      <Flame
+                        className={`w-3.5 h-3.5 ${
+                          active ? 'text-[#101010]' : 'text-[#B7F21B]'
+                        }`}
+                        aria-hidden="true"
+                      />
+                      <span
+                        className={`text-[10px] font-bold uppercase tracking-wider ${
+                          active ? 'text-[#101010]' : 'text-[#B7F21B]'
+                        }`}
+                      >
+                        Oportunidade
+                      </span>
+                    </span>
+                  ) : (
+                    <span
+                      className={`w-2 h-2 rounded-xs ${
+                        active ? 'bg-[#101010]' : 'bg-[#B7F21B]'
+                      }`}
+                      aria-hidden="true"
+                    />
+                  )}
                   <span
                     className={`font-mono-tabular text-xs font-semibold ${
                       active ? 'text-[#101010]/80' : 'text-[#858989]'

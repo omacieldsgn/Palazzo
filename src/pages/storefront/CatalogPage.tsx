@@ -55,8 +55,8 @@ export function CatalogPage() {
 
   const filteredAndSorted = useMemo(() => {
     const filtered = filterMotorcycles(motorcycles, filters);
-    return sortMotorcycles(filtered, sortBy);
-  }, [motorcycles, filters, sortBy]);
+    return sortMotorcycles(filtered, sortBy, categories);
+  }, [motorcycles, filters, sortBy, categories]);
 
   const paginated = useMemo(
     () => paginateItems(filteredAndSorted, page, PAGE_SIZE),
@@ -163,6 +163,7 @@ export function CatalogPage() {
                         key={moto.id}
                         motorcycle={moto}
                         whatsappNumber={settings.whatsappNumber}
+                        categories={categories}
                       />
                     ))}
                   </div>

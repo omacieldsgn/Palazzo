@@ -21,6 +21,9 @@ import {
   DEFAULT_CATEGORIES,
   DEFAULT_SITE_SETTINGS,
   DEMO_MOTORCYCLES,
+  OPPORTUNITY_CATEGORY_DEFAULT,
+  OPPORTUNITY_CATEGORY_ID,
+  OPPORTUNITY_CATEGORY_SLUG,
 } from '../data/demoData';
 import type { Banner, Category, Motorcycle, SiteSettings } from '../types';
 
@@ -77,6 +80,8 @@ function mapMotorcycle(id: string, data: Record<string, unknown>): Motorcycle {
     sortOrder: typeof data.sortOrder === 'number' ? data.sortOrder : 0,
     isDemo: Boolean(data.isDemo),
     coverImage: data.coverImage ? String(data.coverImage) : undefined,
+    coverPosition: data.coverPosition ? String(data.coverPosition) : undefined,
+    coverFit: data.coverFit === 'contain' || data.coverFit === 'cover' ? data.coverFit : undefined,
     images: Array.isArray(data.images) ? (data.images as Motorcycle['images']) : [],
     createdAt: toIsoString(data.createdAt),
     updatedAt: toIsoString(data.updatedAt),
@@ -351,6 +356,8 @@ export async function saveMotorcycle(
     sortOrder: Number(input.sortOrder || 0),
     isDemo: Boolean(input.isDemo),
     coverImage,
+    coverPosition: input.coverPosition?.trim() || '50% 50%',
+    coverFit: input.coverFit || 'cover',
     images: input.images || [],
   });
 
@@ -427,6 +434,8 @@ export async function duplicateMotorcycle(source: Motorcycle): Promise<string> {
     sortOrder: source.sortOrder,
     isDemo: false,
     coverImage: source.coverImage,
+    coverPosition: source.coverPosition || '50% 50%',
+    coverFit: source.coverFit || 'cover',
     images: source.images || [],
   });
 
@@ -495,6 +504,27 @@ export async function saveCategory(
       existingId ? OperationType.UPDATE : OperationType.CREATE,
       `categories/${id}`,
     );
+  }
+}
+
+export async function ensureOpportunityCategoryExists(): Promise<void> {
+  try {
+    const bySlugSnap = await getDocs(
+      query(collection(db, 'categories'), where('slug', '==', OPPORTUNITY_CATEGORY_SLUG)),
+    );
+    if (!bySlugSnap.empty) return;
+
+    const byIdSnap = await getDoc(doc(db, 'categories', OPPORTUNITY_CATEGORY_ID));
+    if (byIdSnap.exists()) return;
+
+    const { id, createdAt: _c, updatedAt: _u, ...rest } = OPPORTUNITY_CATEGORY_DEFAULT;
+    await setDoc(doc(db, 'categories', id), {
+      ...stripUndefined(rest),
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  } catch {
+    // Non-blocking: admin may be offline or rules not yet matched during bootstrap
   }
 }
 

@@ -11,7 +11,11 @@ import { CTASection } from '../../components/storefront/CTASection';
 import { Footer } from '../../components/storefront/Footer';
 import { SearchBar } from '../../components/storefront/SearchBar';
 import { EmptyState, ErrorState, LoadingState } from '../../components/ui/States';
-import { filterMotorcycles, sortMotorcycles } from '../../lib/catalog';
+import {
+  filterMotorcycles,
+  isOpportunityMotorcycle,
+  sortMotorcycles,
+} from '../../lib/catalog';
 import { useStorefrontData } from '../../hooks/useStorefrontData';
 import type { SortOption, StorefrontSectionKey } from '../../types';
 
@@ -42,6 +46,22 @@ export function HomePage() {
     [motorcycles],
   );
 
+  const opportunityMotorcycles = useMemo(
+    () =>
+      sortMotorcycles(
+        motorcycles.filter(
+          (m) =>
+            m.published &&
+            m.status !== 'hidden' &&
+            m.status !== 'sold' &&
+            isOpportunityMotorcycle(m, categories),
+        ),
+        'recent',
+        categories,
+      ).slice(0, 6),
+    [motorcycles, categories],
+  );
+
   const featuredMotorcycles = useMemo(
     () =>
       sortMotorcycles(
@@ -49,8 +69,9 @@ export function HomePage() {
           (m) => m.published && m.status === 'available' && m.featured,
         ),
         'recent',
+        categories,
       ).slice(0, 6),
-    [motorcycles],
+    [motorcycles, categories],
   );
 
   const filteredCatalog = useMemo(() => {
@@ -58,8 +79,8 @@ export function HomePage() {
       search: searchQuery,
       categoryId: selectedCategory,
     });
-    return sortMotorcycles(filtered, sortBy).slice(0, 9);
-  }, [motorcycles, searchQuery, selectedCategory, sortBy]);
+    return sortMotorcycles(filtered, sortBy, categories).slice(0, 9);
+  }, [motorcycles, searchQuery, selectedCategory, sortBy, categories]);
 
   const handleCategoryPick = (catId: string) => {
     setSelectedCategory(catId);
@@ -84,13 +105,54 @@ export function HomePage() {
 
       case 'categories':
         return (
-          <CategorySection
-            key="categories"
-            categories={categories}
-            selectedCategoryId={selectedCategory}
-            onSelectCategory={handleCategoryPick}
-            countsByCategory={countsByCategory}
-          />
+          <div key="categories">
+            <CategorySection
+              categories={categories}
+              selectedCategoryId={selectedCategory}
+              onSelectCategory={handleCategoryPick}
+              countsByCategory={countsByCategory}
+            />
+            {!loading && opportunityMotorcycles.length > 0 && (
+              <section
+                id="ofertas-imperdiveis"
+                className="py-14 sm:py-18 bg-[#0B0D0D] border-b border-[#B7F21B]/25"
+              >
+                <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+                  <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-9">
+                    <div>
+                      <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#B7F21B]">
+                        Oportunidades de Showroom · Estoque Limitado
+                      </span>
+                      <h2 className="font-display text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-[#F3F3F3] mt-1">
+                        OFERTAS IMPERDÍVEIS
+                      </h2>
+                      <p className="text-sm text-[#858989] mt-2">
+                        Condições especiais por tempo limitado. Unidades únicas sujeitas à venda imediata.
+                      </p>
+                    </div>
+                    <Link
+                      to="/categoria/ofertas-imperdiveis"
+                      className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#B7F21B] hover:text-[#D0FF36] transition-colors whitespace-nowrap"
+                    >
+                      <span>Ver todas as ofertas</span>
+                      <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                    </Link>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {opportunityMotorcycles.map((moto) => (
+                      <MotorcycleCard
+                        key={moto.id}
+                        motorcycle={moto}
+                        whatsappNumber={settings.whatsappNumber}
+                        categories={categories}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </section>
+            )}
+          </div>
         );
 
       case 'featured':
@@ -128,6 +190,7 @@ export function HomePage() {
                       key={moto.id}
                       motorcycle={moto}
                       whatsappNumber={settings.whatsappNumber}
+                      categories={categories}
                     />
                   ))}
                 </div>
@@ -201,6 +264,7 @@ export function HomePage() {
                         key={moto.id}
                         motorcycle={moto}
                         whatsappNumber={settings.whatsappNumber}
+                        categories={categories}
                       />
                     ))}
                   </div>

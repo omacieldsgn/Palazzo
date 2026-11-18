@@ -45,6 +45,13 @@ export const motorcycleFormSchema = z.object({
   published: z.boolean(),
   badge: z.string().trim().max(40).optional(),
   sortOrder: z.number().int().min(0).max(100000),
+  coverPosition: z
+    .string()
+    .trim()
+    .max(32)
+    .regex(/^\d{1,3}%\s+\d{1,3}%$/, 'Posição de capa inválida')
+    .optional(),
+  coverFit: z.enum(['cover', 'contain']).optional(),
   images: z.array(motorcycleImageSchema).max(15).optional(),
 });
 

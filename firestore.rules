@@ -86,7 +86,8 @@ service cloud.firestore {
           'transmission', 'power', 'cylinders', 'features', 'description',
           'price', 'oldPrice', 'paymentInfo', 'downPaymentInfo', 'installmentInfo',
           'promoText', 'condition', 'status', 'featured', 'published', 'badge',
-          'sortOrder', 'isDemo', 'coverImage', 'images', 'createdAt', 'updatedAt'
+          'sortOrder', 'isDemo', 'coverImage', 'coverPosition', 'coverFit',
+          'images', 'createdAt', 'updatedAt'
         ]) &&
         isValidSlug(data.slug) &&
         data.name is string && data.name.size() >= 2 && data.name.size() <= 140 &&
@@ -120,6 +121,8 @@ service cloud.firestore {
         data.sortOrder is int && data.sortOrder >= 0 && data.sortOrder <= 100000 &&
         (!('isDemo' in data) || data.isDemo is bool) &&
         (!('coverImage' in data) || (data.coverImage is string && data.coverImage.size() <= 600)) &&
+        (!('coverPosition' in data) || (data.coverPosition is string && data.coverPosition.size() <= 32 && data.coverPosition.matches('^[0-9]{1,3}% [0-9]{1,3}%$'))) &&
+        (!('coverFit' in data) || data.coverFit in ['cover', 'contain']) &&
         (!('images' in data) || (data.images is list && data.images.size() <= 15 && (data.images.size() == 0 || data.images[0] is map))) &&
         data.createdAt is timestamp &&
         data.updatedAt is timestamp;
@@ -213,7 +216,8 @@ service cloud.firestore {
           'transmission', 'power', 'cylinders', 'features', 'description',
           'price', 'oldPrice', 'paymentInfo', 'downPaymentInfo', 'installmentInfo',
           'promoText', 'condition', 'status', 'featured', 'published', 'badge',
-          'sortOrder', 'isDemo', 'coverImage', 'images', 'updatedAt'
+          'sortOrder', 'isDemo', 'coverImage', 'coverPosition', 'coverFit',
+          'images', 'updatedAt'
         ]);
       allow delete: if isValidId(motorcycleId) && isAdmin();
     }

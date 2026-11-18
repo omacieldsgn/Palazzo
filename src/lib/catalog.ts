@@ -1,4 +1,43 @@
-import type { CatalogFilters, Motorcycle, SortOption } from '../types';
+import type { CatalogFilters, Category, Motorcycle, SortOption } from '../types';
+
+export const OPPORTUNITY_CATEGORY_ID = 'cat-ofertas-imperdiveis';
+export const OPPORTUNITY_CATEGORY_SLUG = 'ofertas-imperdiveis';
+
+export function isOpportunityCategory(
+  category?: Pick<Category, 'id' | 'slug' | 'name'> | null,
+): boolean {
+  if (!category) return false;
+  if (category.id === OPPORTUNITY_CATEGORY_ID) return true;
+  if (category.slug === OPPORTUNITY_CATEGORY_SLUG) return true;
+  const normalizedName = category.name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+  return normalizedName === OPPORTUNITY_CATEGORY_SLUG;
+}
+
+export function isOpportunityMotorcycle(
+  moto: Pick<Motorcycle, 'categoryId' | 'categoryName'>,
+  categories?: Array<Pick<Category, 'id' | 'slug' | 'name'>>,
+): boolean {
+  if (moto.categoryId === OPPORTUNITY_CATEGORY_ID) return true;
+  if (categories && categories.length > 0) {
+    const matched = categories.find((c) => c.id === moto.categoryId);
+    if (matched && isOpportunityCategory(matched)) return true;
+  }
+  if (moto.categoryName) {
+    const normalizedName = moto.categoryName
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+    if (normalizedName === OPPORTUNITY_CATEGORY_SLUG) return true;
+  }
+  return false;
+}
 
 export function filterMotorcycles(
   motorcycles: Motorcycle[],
@@ -71,6 +110,7 @@ export function filterMotorcycles(
 export function sortMotorcycles(
   motorcycles: Motorcycle[],
   sortBy: SortOption,
+  categories?: Array<Pick<Category, 'id' | 'slug' | 'name'>>,
 ): Motorcycle[] {
   const copy = [...motorcycles];
 
@@ -84,11 +124,20 @@ export function sortMotorcycles(
     case 'year_desc':
       return copy.sort((a, b) => b.yearModel - a.yearModel || a.price - b.price);
     case 'recent':
-    default:
+    default: {
+      const getPriority = (m: Motorcycle) => {
+        if (m.status === 'sold' || m.status === 'hidden') return 0;
+        if (isOpportunityMotorcycle(m, categories)) return 2;
+        return 1;
+      };
       return copy.sort((a, b) => {
+        const aPriority = getPriority(a);
+        const bPriority = getPriority(b);
+        if (aPriority !== bPriority) return bPriority - aPriority;
         if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       });
+    }
   }
 }
 

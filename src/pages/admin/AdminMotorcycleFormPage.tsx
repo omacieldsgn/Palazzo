@@ -1,19 +1,33 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, Loader2, Save, Zap } from 'lucide-react';
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Crosshair,
+  Flame,
+  Loader2,
+  Maximize2,
+  Minimize2,
+  Save,
+  Zap,
+} from 'lucide-react';
 import { AdminLayout } from '../../components/admin/AdminLayout';
 import { ImageUploader } from '../../components/admin/ImageUploader';
+import { ResilientImage } from '../../components/ui/ResilientImage';
 import { useToast } from '../../context/ToastContext';
 import { DEFAULT_CATEGORIES } from '../../data/demoData';
+import { isOpportunityCategory } from '../../lib/catalog';
 import { generateSafeId, generateSlug } from '../../lib/formatters';
 import { motorcycleFormSchema, quickMotorcycleSchema } from '../../lib/validations';
 import {
+  ensureOpportunityCategoryExists,
   getMotorcycleById,
   saveMotorcycle,
   subscribeAdminCategories,
 } from '../../services/firestoreService';
 import type {
   Category,
+  CoverFit,
   MotorcycleCondition,
   MotorcycleImage,
   MotorcycleStatus,
@@ -62,6 +76,10 @@ export function AdminMotorcycleFormPage() {
   const [promoText, setPromoText] = useState('');
 
   const [images, setImages] = useState<MotorcycleImage[]>([]);
+  const [coverFit, setCoverFit] = useState<CoverFit>('cover');
+  const [coverX, setCoverX] = useState<number>(50);
+  const [coverY, setCoverY] = useState<number>(50);
+  const ensuredOpportunityRef = useRef(false);
 
   const [status, setStatus] = useState<MotorcycleStatus>('available');
   const [published, setPublished] = useState(true);
@@ -80,6 +98,13 @@ export function AdminMotorcycleFormPage() {
         if (!isEditing) {
           setCategoryId((prev) => (list.some((c) => c.id === prev) ? prev : list[0].id));
         }
+        if (!ensuredOpportunityRef.current && !list.some((c) => isOpportunityCategory(c))) {
+          ensuredOpportunityRef.current = true;
+          void ensureOpportunityCategoryExists();
+        }
+      } else if (!ensuredOpportunityRef.current) {
+        ensuredOpportunityRef.current = true;
+        void ensureOpportunityCategoryExists();
       }
     });
 
@@ -117,6 +142,14 @@ export function AdminMotorcycleFormPage() {
           setInstallmentInfo(moto.installmentInfo || '');
           setPromoText(moto.promoText || '');
           setImages(moto.images || []);
+          setCoverFit(moto.coverFit || 'cover');
+          if (moto.coverPosition) {
+            const match = moto.coverPosition.match(/^(\d{1,3})%\s+(\d{1,3})%$/);
+            if (match) {
+              setCoverX(Math.min(100, Math.max(0, Number(match[1]))));
+              setCoverY(Math.min(100, Math.max(0, Number(match[2]))));
+            }
+          }
           setStatus(moto.status);
           setPublished(moto.published);
           setFeatured(moto.featured);
@@ -146,9 +179,17 @@ export function AdminMotorcycleFormPage() {
     }
   }, [brand, model, version, name, yearModel, slugTouched, isEditing]);
 
-  const selectedCategoryName = useMemo(
-    () => categories.find((c) => c.id === categoryId)?.name || '',
+  const selectedCategory = useMemo(
+    () => categories.find((c) => c.id === categoryId),
     [categories, categoryId],
+  );
+  const selectedCategoryName = selectedCategory?.name || '';
+  const isOpportunitySelected = isOpportunityCategory(selectedCategory);
+
+  const coverPosition = `${Math.round(coverX)}% ${Math.round(coverY)}%`;
+  const activeCoverPreview = useMemo(
+    () => images.find((img) => img.isCover)?.storagePath || images[0]?.storagePath || '',
+    [images],
   );
 
   const handleSave = async (overridePublished?: boolean) => {
@@ -216,6 +257,8 @@ export function AdminMotorcycleFormPage() {
       badge: badge.trim() || undefined,
       sortOrder: Number(sortOrder || 0),
       isDemo: false,
+      coverPosition,
+      coverFit,
       images,
     };
 
@@ -391,6 +434,14 @@ export function AdminMotorcycleFormPage() {
                     </option>
                   ))}
                 </select>
+                {isOpportunitySelected && (
+                  <p className="mt-1.5 text-[11px] font-medium text-[#B7F21B] flex items-center gap-1.5">
+                    <Flame className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <span>
+                      Categoria estratégica: exibida na Home e no topo do Estoque com etiqueta de escassez.
+                    </span>
+                  </p>
+                )}
               </div>
             </div>
 
@@ -707,7 +758,7 @@ export function AdminMotorcycleFormPage() {
           </section>
 
           {/* GRUPO 4 — IMAGENS */}
-          <section className="bg-[#141515] border border-[#242727] rounded-xl p-6 space-y-4">
+          <section className="bg-[#141515] border border-[#242727] rounded-xl p-6 space-y-5">
             <h2 className="font-display text-sm font-bold uppercase tracking-wider text-[#B7F21B]">
               {quickMode ? 'Fotos da Motocicleta' : 'Grupo 4 — Galeria de Imagens'}
             </h2>
@@ -716,6 +767,194 @@ export function AdminMotorcycleFormPage() {
               images={images}
               onChange={setImages}
             />
+
+            {activeCoverPreview && (
+              <div className="pt-5 border-t border-[#242727] space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
+                    <h3 className="text-sm font-semibold text-[#F3F3F3]">
+                      Enquadramento e Centralização da Foto de Capa
+                    </h3>
+                    <p className="text-xs text-[#858989]">
+                      Ajuste como a foto principal aparece nos cards da vitrine. Clique na imagem ou use os controles para centralizar.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCoverX(50);
+                      setCoverY(50);
+                    }}
+                    className="h-9 px-3.5 rounded-lg border border-[#B7F21B]/50 bg-[#B7F21B]/10 text-[#B7F21B] hover:bg-[#B7F21B] hover:text-[#101010] text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors self-start sm:self-auto shrink-0"
+                  >
+                    <Crosshair className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>Centralizar Capa (50% / 50%)</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
+                  {/* Live 4:3 Storefront Crop Preview */}
+                  <div className="md:col-span-5">
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      aria-label="Prévia da capa. Clique para reposicionar o foco da imagem."
+                      onClick={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const xPct = Math.round(
+                          Math.min(100, Math.max(0, ((e.clientX - rect.left) / rect.width) * 100)),
+                        );
+                        const yPct = Math.round(
+                          Math.min(100, Math.max(0, ((e.clientY - rect.top) / rect.height) * 100)),
+                        );
+                        setCoverX(xPct);
+                        setCoverY(yPct);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setCoverX(50);
+                          setCoverY(50);
+                        }
+                      }}
+                      className="relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-[#0D0F0F] border border-[#303434] cursor-crosshair select-none"
+                    >
+                      <ResilientImage
+                        src={activeCoverPreview}
+                        alt="Prévia do enquadramento da foto de capa"
+                        className={`w-full h-full ${
+                          coverFit === 'contain' ? 'object-contain p-2' : 'object-cover'
+                        }`}
+                        style={{ objectPosition: coverPosition }}
+                      />
+                      {/* Subtle center alignment guides */}
+                      <div
+                        className="pointer-events-none absolute inset-0 border border-dashed border-white/15"
+                        aria-hidden="true"
+                      />
+                      <div
+                        className="pointer-events-none absolute left-1/2 top-0 bottom-0 w-px bg-[#B7F21B]/25"
+                        aria-hidden="true"
+                      />
+                      <div
+                        className="pointer-events-none absolute top-1/2 left-0 right-0 h-px bg-[#B7F21B]/25"
+                        aria-hidden="true"
+                      />
+                      {coverFit === 'cover' && (
+                        <span
+                          className="pointer-events-none absolute w-3.5 h-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#B7F21B] bg-[#080909]/80 shadow"
+                          style={{ left: `${coverX}%`, top: `${coverY}%` }}
+                          aria-hidden="true"
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Framing Controls */}
+                  <div className="md:col-span-7 space-y-4">
+                    <div>
+                      <span className="block text-xs font-medium text-[#858989] mb-2">
+                        Modo de Exibição no Card
+                      </span>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setCoverFit('cover')}
+                          className={`h-10 px-3 rounded-lg border text-xs font-semibold inline-flex items-center justify-center gap-2 transition-colors ${
+                            coverFit === 'cover'
+                              ? 'bg-[#B7F21B] border-[#B7F21B] text-[#101010]'
+                              : 'bg-[#0D0F0F] border-[#303434] text-[#F3F3F3] hover:border-[#B7F21B]/60'
+                          }`}
+                        >
+                          <Maximize2 className="w-3.5 h-3.5" aria-hidden="true" />
+                          <span>Preencher quadro (Cover)</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCoverFit('contain');
+                            setCoverX(50);
+                            setCoverY(50);
+                          }}
+                          className={`h-10 px-3 rounded-lg border text-xs font-semibold inline-flex items-center justify-center gap-2 transition-colors ${
+                            coverFit === 'contain'
+                              ? 'bg-[#B7F21B] border-[#B7F21B] text-[#101010]'
+                              : 'bg-[#0D0F0F] border-[#303434] text-[#F3F3F3] hover:border-[#B7F21B]/60'
+                          }`}
+                        >
+                          <Minimize2 className="w-3.5 h-3.5" aria-hidden="true" />
+                          <span>Centralizar inteira sem cortes</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {coverFit === 'cover' && (
+                      <>
+                        <div className="flex flex-wrap gap-2">
+                          {[
+                            { label: 'Centro', x: 50, y: 50 },
+                            { label: 'Topo', x: 50, y: 20 },
+                            { label: 'Base', x: 50, y: 80 },
+                            { label: 'Esquerda', x: 20, y: 50 },
+                            { label: 'Direita', x: 80, y: 50 },
+                          ].map((preset) => {
+                            const active = coverX === preset.x && coverY === preset.y;
+                            return (
+                              <button
+                                key={preset.label}
+                                type="button"
+                                onClick={() => {
+                                  setCoverX(preset.x);
+                                  setCoverY(preset.y);
+                                }}
+                                className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
+                                  active
+                                    ? 'border-[#B7F21B] bg-[#B7F21B]/15 text-[#B7F21B]'
+                                    : 'border-[#303434] bg-[#0D0F0F] text-[#858989] hover:text-[#F3F3F3]'
+                                }`}
+                              >
+                                {preset.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div>
+                            <div className="flex items-center justify-between text-xs text-[#858989] mb-1">
+                              <span>Posição Horizontal (X)</span>
+                              <span className="font-mono-tabular text-[#F3F3F3]">{coverX}%</span>
+                            </div>
+                            <input
+                              type="range"
+                              min={0}
+                              max={100}
+                              value={coverX}
+                              onChange={(e) => setCoverX(Number(e.target.value))}
+                              className="w-full accent-[#B7F21B]"
+                            />
+                          </div>
+                          <div>
+                            <div className="flex items-center justify-between text-xs text-[#858989] mb-1">
+                              <span>Posição Vertical (Y)</span>
+                              <span className="font-mono-tabular text-[#F3F3F3]">{coverY}%</span>
+                            </div>
+                            <input
+                              type="range"
+                              min={0}
+                              max={100}
+                              value={coverY}
+                              onChange={(e) => setCoverY(Number(e.target.value))}
+                              className="w-full accent-[#B7F21B]"
+                            />
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </section>
 
           {/* GRUPO 5 — PUBLICAÇÃO */}
